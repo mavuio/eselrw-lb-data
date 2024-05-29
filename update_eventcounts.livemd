@@ -1,0 +1,40 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# update eventcounts
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+require Ecto.Query
+require Ash.Query
+```
+
+## Section
+
+```elixir
+Location.get_rows_as_stream()
+|> Stream.map(&Location.update_eventcount/1)
+|> Stream.take(1_000_000)
+|> Stream.run()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
+
+```elixir
+Agent.get_rows_as_stream()
+|> Stream.map(&Agent.update_eventcount/1)
+|> Stream.take(1_000_000)
+|> Stream.run()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```

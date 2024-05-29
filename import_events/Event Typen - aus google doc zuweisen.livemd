@@ -1,0 +1,175 @@
+# [IM3] Event Typen - aus google doc zuweisen
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+import Ecto.Query
+import MavuBuckets
+```
+
+## Section
+
+```elixir
+defmodule Helper do
+  def extract_tags(tagstr) do
+    # "#{tagstr}"  
+    # |> String.split(",", trim: true)
+    ["#{tagstr}"]
+    |> CSV.decode()
+    |> Enum.into(%{})
+    |> case do
+      %{ok: tagstrings} ->
+        tagstrings
+
+      _ ->
+        []
+    end
+    |> Enum.map(&clean_str/1)
+    |> Enum.reject(&MavuUtils.empty?/1)
+  end
+
+  def clean_str(str) do
+    str
+    |> String.replace(~w(ä Ä), "ae")
+    |> String.replace(~w(ö Ö), "oe")
+    |> String.replace(~w(ü Ü), "ue")
+    |> Slug.slugify()
+  end
+
+  def get_stats_for_string(str) do
+    MavuBuckets.bucket_cache "spacy_strings/#{str}", :stats, [], 86400 * 1000 do
+      MyApp.PythonServer.call_function(:labelizer, :stats, [str])
+      |> Jason.decode!()
+    end
+  end
+
+  def get_label_for_string(str) do
+    get_stats_for_string(str)
+    |> Map.get("labels")
+    |> Enum.map(fn a -> a["label"] end)
+    |> Enum.join(", ")
+  end
+
+  def get_lemma_for_string(str) do
+    get_stats_for_string(str)
+    |> Map.get("lemmas")
+    |> Enum.map(fn a -> a["lemma"] end)
+    |> Enum.join(", ")
+  end
+end
+```
+
+```elixir
+# Tags aus allen Legacy-Events holen:
+
+tags =
+  MyApp.LegacyEvent
+  |> select([e], e.tags)
+  |> distinct([e], e.tags)
+  # |> limit(100)
+  |> Repo.all()
+  |> Enum.flat_map(&Helper.extract_tags/1)
+  |> Enum.frequencies()
+  |> Map.to_list()
+  |> Enum.map(fn {tag, num} -> %{tag: tag, count: num} end)
+  |> Enum.sort_by(& &1.count, :desc)
+
+tags |> Kino.DataTable.new()
+```
+
+upload "legacy_tags_fuer_livebook.csv" here: ↓
+
+```elixir
+file = Kino.Input.file("Upload your file", accept: ~w(.csv))
+```
+
+```elixir
+value = Kino.Input.read(file)
+# Get the full filepath
+path = Kino.Input.file_path(value.file_ref)
+
+# Read the file contents
+content = File.read!(path)
+
+tags_to_map =
+  path
+  |> File.stream!()
+  |> CSV.decode!(headers: true, separator: ?,)
+  |> Enum.take(1_000_000)
+  |> AtomicMap.convert(safe: false)
+
+tags_to_map |> Kino.DataTable.new()
+```
+
+```elixir
+defmodule EventTagImporter do
+  def find_disciplines_and_eventtypes_for_single_tag(tagslug, tags_to_map) do
+    tags_to_map
+    |> Enum.find(&(&1.tagslug == tagslug))
+    |> case do
+      nil ->
+        {[], []}
+
+      rec ->
+        {rec.art_discipline_major |> get_tags_from_str(),
+         rec.event_type_major |> get_tags_from_str()}
+    end
+  end
+
+  def get_tags_from_str(str) do
+    str |> String.split(",", trim: true)
+  end
+
+  def find_disciplines_and_eventtypes_for_tags(tags_of_event, tags_to_map) do
+    {disciplines, eventtypes} =
+      for tagslug <- tags_of_event, reduce: {[], []} do
+        {acc_disciplines, acc_eventtypes} ->
+          {discipline, eventtype} =
+            find_disciplines_and_eventtypes_for_single_tag(tagslug, tags_to_map)
+
+          {acc_disciplines ++ List.wrap(discipline), acc_eventtypes ++ List.wrap(eventtype)}
+      end
+  end
+
+  def upgrade_tags_in_event(legacy_event, tags_to_map) do
+    tags = Helper.extract_tags(legacy_event.tags)
+
+    Event.get_by_legacy_event_id(legacy_event.id)
+    |> case do
+      {:ok, ev} ->
+        {disciplines, eventtypes} = find_disciplines_and_eventtypes_for_tags(tags, tags_to_map)
+
+        for discipline_slug <- disciplines do
+          ev.id |> Events.add_art_discipline_major(discipline_slug)
+        end
+
+        for eventtype_slug <- eventtypes do
+          ev.id |> Events.add_eventtype_major(eventtype_slug)
+        end
+
+        %{
+          event_id: ev.id,
+          tags: tags,
+          disciplines: disciplines,
+          eventtypes: eventtypes
+        }
+
+      {:error, error_info} ->
+        %{
+          event_id: "not found",
+          tags: tags,
+          disciplines: nil,
+          eventtypes: nil
+        }
+    end
+  end
+end
+```
+
+```elixir
+MyApp.LegacyEvent
+|> Repo.all()
+|> Enum.map(&EventTagImporter.upgrade_tags_in_event(&1, tags_to_map))
+|> Kino.DataTable.new()
+```

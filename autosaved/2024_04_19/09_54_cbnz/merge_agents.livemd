@@ -1,0 +1,42 @@
+# Merge Agents
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+import Ecto.Query
+require Ash.Query
+```
+
+## Section
+
+```elixir
+to_delete = Agent.get_by_id!("ag_02wISBzXQj8ZDdDP1gecVB")
+```
+
+```elixir
+to_keep = Agent.get_by_id!("ag_02v0lSPez5VrEAVr5apxGe")
+```
+
+```elixir
+merged_data = MyApp.Agents.merge_agent_attributes(to_delete, to_keep)
+```
+
+```elixir
+merged_data.names
+```
+
+```elixir
+# remove slug to prevent errors on slug duplication
+to_delete
+|> Ash.Changeset.for_update(:update, %{slug: nil})
+|> Ash.update!()
+
+MyApp.Agents.move_arrows(to_delete.id, to_keep.id)
+# write result:
+
+to_keep
+|> Ash.Changeset.for_update(:update, merged_data)
+|> Ash.update!()
+```

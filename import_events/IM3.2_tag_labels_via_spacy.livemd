@@ -1,0 +1,19 @@
+# IM3.2 Entity labels von Legacy Tags ermitteln (SpaCy)
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+IEx.configure(inspect: [charlists: :as_lists])
+```
+
+## Section
+
+```elixir
+MyApp.PythonServer.restart()
+
+MyApp.PythonServer.call_function(:labelizer, :stats, [
+  "grosseinkauf"
+])
+|> Jason.decode!()
+```

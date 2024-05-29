@@ -1,0 +1,57 @@
+# IM1_erstimport
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+require Ash.Query
+```
+
+## Section
+
+```elixir
+relevante_kategorien =
+  [
+    "Public Access",
+    "Uhu Diskurs",
+    "hAmSteR Events",
+    "eSeL's Neugierde",
+    "eSeLs Neugierde",
+    "nicht in wien",
+    "nicht in Wien",
+    "Flimmer Ratte",
+    "Tauben Loge",
+    "Kanari Klangwelten",
+    "Gepard",
+    "Maultier Kunst",
+    "Ameisen Urbanismus",
+    "Pudel Design",
+    "Eselchen Kinderprogramm",
+    "Nerz Techleben",
+    "Pfau Fotos"
+  ]
+```
+
+```elixir
+query =
+  MyApp.LegacyEvent
+  |> Ash.Query.filter(category in ^relevante_kategorien)
+  |> Ash.Query.filter(fragment("length(?) >1", title))
+
+# |> Ash.Query.filter(category: "Uhu Diskurs")
+```
+
+```elixir
+query |> MyApp.Api.count!()
+```
+
+```elixir
+query
+# |> Ash.Query.limit(10000)
+|> Ash.Query.sort(id: :desc)
+|> MyApp.Api.read!()
+|> Enum.map(fn a -> LegacyEventToRealEvent.make_real_event(a) end)
+
+# |> Enum.filter(fn {state,_stuff}-> state==:error end)
+```

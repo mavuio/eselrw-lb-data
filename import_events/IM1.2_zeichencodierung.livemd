@@ -1,0 +1,76 @@
+# [IM1.2] zeichencodierung_events
+
+```elixir
+require Ash.Query
+require Ecto.Query
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+```
+
+## Section
+
+```elixir
+query_title =
+  MyApp.Event
+  |> Ecto.Query.where([e], fragment("? ~ ?", e.title, "&[a-z0-9]+;"))
+  |> Ecto.Query.select([e], %{id: e.id, title: e.title})
+```
+
+```elixir
+query_description =
+  MyApp.Event
+  |> Ecto.Query.where([e], fragment("? ~ ?", e.description, "&[a-z0-9]+;"))
+  |> Ecto.Query.select([e], %{id: e.id, description: e.description})
+```
+
+```elixir
+query_title
+|> Repo.all()
+# |> Repo.aggregate(:count)
+# |> Enum.map(fn a -> %{a |title: LegacyEventImport.htmlentities_decode(a.title)} end)
+#  |> hd()
+|> Kino.DataTable.new()
+```
+
+```elixir
+query_description
+|> MyApp.Repo.all()
+|> Kino.DataTable.new()
+```
+
+```elixir
+# fix all titles:
+
+query_title
+|> Ecto.Query.limit(500)
+|> Repo.all()
+|> Enum.map(fn rec ->
+  Event.get_by_id!(rec.id)
+  |> Ash.Changeset.for_update(:update, %{title: LegacyEventImport.htmlentities_decode(rec.title)})
+  |> Api.update!()
+end)
+|> Enum.map(fn a -> Map.take(a, ~w(id title)a) end)
+|> Kino.DataTable.new()
+
+#  |> hd()
+```
+
+```elixir
+# fix all descriptions:
+
+query_description
+|> Ecto.Query.limit(5000)
+|> Repo.all()
+|> Enum.map(fn rec ->
+  Event.get_by_id!(rec.id)
+  |> Ash.Changeset.for_update(:update, %{
+    description: LegacyEventImport.htmlentities_decode(rec.description)
+  })
+  |> Api.update!()
+end)
+|> Enum.map(fn a -> Map.take(a, ~w(id description)a) end)
+|> Kino.DataTable.new()
+
+#  |> hd()
+```

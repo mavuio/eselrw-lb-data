@@ -1,0 +1,37 @@
+# [IM4] import locations
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+IEx.configure(inspect: [charlists: :as_lists])
+require Ash.Query
+```
+
+## Section
+
+```elixir
+query =
+  MyApp.LegacyLocation
+  |> Ash.Query.filter(zip > "1000")
+  |> Ash.Query.filter(fragment("length(?) >1", name))
+```
+
+```elixir
+query
+|> Api.count()
+```
+
+```elixir
+# query
+# # |> Ash.Query.limit(1000)
+# |> Ash.Query.sort(id: :desc)
+# |> MyApp.Api.read!()
+# |> Enum.map(fn a ->   .make_real_location(a) end)
+```
+
+```elixir
+MyApp.Location
+|> Ash.Query.filter(esel_legacy_id > 1)
+|> Api.count()
+```

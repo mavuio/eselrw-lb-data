@@ -1,0 +1,36 @@
+# first run
+
+## Section
+
+```elixir
+e =
+  MyApp.Event.read_all!() |> hd()
+```
+
+```elixir
+defmodule ParseUrl do
+  def get_tweaks_from_url(url) do
+    url
+    |> URI.parse()
+    |> case do
+      %{query: q} ->
+        q
+        |> URI.decode_query()
+        |> case do
+          %{"items_filtered_tweaks" => tweaks} ->
+            tweaks
+            |> Jason.decode!()
+            |> case do
+              %{"ash_filterform" => ff} ->
+                ff
+            end
+        end
+    end
+  end
+end
+```
+
+```elixir
+"https://rewind.esel.at/be/agents?items_filtered_tweaks=%7B%22sort_by%22%3A%5B%5B%22title%22%2C%22asc%22%5D%5D%2C%22page%22%3A1%2C%22ash_filterform%22%3A%7B%22components%22%3A%7B%220%22%3A%7B%22_persistent_id%22%3A%220%22%2C%22field%22%3A%22agenttypes%22%2C%22id%22%3A%22529ab660-6e00-47ca-8948-0535d236aef6%22%2C%22operator%22%3A%22filtertype-embedded_tagfilter_has%22%2C%22value%22%3A%22018c589a-7112-78d1-8d94-0641999a96ff%2C018c589b-91ec-768f-803b-194a4396cb35%2C018e3c75-9a6a-748d-8de6-b004c3f23050%22%7D%7D%2C%22operator%22%3A%22and%22%7D%7D"
+|> ParseUrl.get_tweaks_from_url()
+```

@@ -1,0 +1,32 @@
+# statistik legacy
+
+```elixir
+require Ash.Query
+```
+
+## Section
+
+```elixir
+# alle events ohne titel
+
+MyApp.LegacyEvent
+|> Ash.Query.filter(is_nil(title) or title == "")
+|> MyApp.Api.count!()
+```
+
+```elixir
+# alle events ohne titel
+
+MyApp.LegacyEvent
+|> Ash.Query.filter(is_nil(title) or title == "")
+|> MyApp.Api.max!(:start)
+```
+
+```elixir
+{:ok, tag} = NaiveDateTime.new(~D[1990-01-13], ~T[23:00:07.005])
+
+MyApp.LegacyEvent
+|> Ash.Query.filter(is_nil(title) or title == "")
+|> Ash.Query.filter(start > ^tag)
+|> MyApp.Api.min!(:start)
+```

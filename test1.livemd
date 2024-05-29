@@ -1,0 +1,12 @@
+# first run
+
+## Section
+
+```elixir
+e =
+  MyApp.Event.read_all!() |> hd()
+```
+
+```elixir
+e
+```

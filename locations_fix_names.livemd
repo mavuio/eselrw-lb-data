@@ -1,0 +1,51 @@
+# locations_fix_names
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+IEx.configure(inspect: [charlists: :as_lists])
+import Ash.Query
+```
+
+## Section
+
+```elixir
+defmodule NameAdder do
+  def update_if_needed(rec) do
+    if not names_contain_title?(rec) do
+      rec
+
+      names =
+        [%{text: rec.title} | rec.names || []]
+
+      rec
+      |> Ash.Changeset.for_update(:update, %{names: names})
+      |> Ash.update!()
+    else
+      {rec.title, :already_ok}
+    end
+  end
+
+  def names_contain_title?(rec) do
+    # Enum.find(fn x.names-> x end)
+    names = get_names(rec)
+    {rec.title, names}
+    Enum.member?(names, rec.title)
+  end
+
+  def get_names(rec) do
+    (rec.names || [])
+    |> Enum.map(fn a -> a.text end)
+  end
+end
+```
+
+```elixir
+MyApp.Location
+# |> Ash.Query.filter(id == "loc_02w3FISo5K1ZHSDj3ImnOi")
+# |> Ash.Query.limit(20)
+|> Api.read!()
+# |> Enum.map(fn a -> a  |> Map.take(~w(names title)a) end)
+|> Enum.map(&NameAdder.update_if_needed/1)
+```

@@ -1,0 +1,117 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# [IM3] Event Typen
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+import Ecto.Query
+import MavuBuckets
+```
+
+## Section
+
+```elixir
+defmodule Helper do
+  def extract_tags(tagstr) do
+    # "#{tagstr}"  
+    # |> String.split(",", trim: true)
+    ["#{tagstr}"]
+    |> CSV.decode()
+    |> Enum.into(%{})
+    |> case do
+      %{ok: tagstrings} ->
+        tagstrings
+
+      _ ->
+        []
+    end
+    |> Enum.map(&clean_str/1)
+    |> Enum.reject(&MavuUtils.empty?/1)
+  end
+
+  def clean_str(str) do
+    str
+    |> String.replace(~w(ä Ä), "ae")
+    |> String.replace(~w(ö Ö), "oe")
+    |> String.replace(~w(ü Ü), "ue")
+    |> Slug.slugify()
+  end
+
+  def get_stats_for_string(str) do
+    MavuBuckets.bucket_cache "spacy_strings/#{str}", :stats, [], 86400 * 1000 do
+      MyApp.PythonServer.call_function(:labelizer, :stats, [str])
+      |> Jason.decode!()
+    end
+  end
+
+  def get_label_for_string(str) do
+    get_stats_for_string(str)
+    |> Map.get("labels")
+    |> Enum.map(fn a -> a["label"] end)
+    |> Enum.join(", ")
+  end
+
+  def get_lemma_for_string(str) do
+    get_stats_for_string(str)
+    |> Map.get("lemmas")
+    |> Enum.map(fn a -> a["lemma"] end)
+    |> Enum.join(", ")
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Helper, <<70, 79, 82, 49, 0, 0, 16, ...>>, {:get_lemma_for_string, 1}}
+```
+
+```elixir
+# Tags aus allen Legacy-Events holen:
+
+tags =
+  MyApp.LegacyEvent
+  |> select([e], e.tags)
+  |> distinct([e], e.tags)
+  # |> limit(100)
+  |> Repo.all()
+  |> Enum.flat_map(&Helper.extract_tags/1)
+  |> Enum.frequencies()
+  |> Map.to_list()
+  |> Enum.map(fn {tag, num} -> %{tag: tag, count: num} end)
+  |> Enum.sort_by(& &1.count, :desc)
+
+tags |> Kino.DataTable.new()
+```
+
+```elixir
+output_content =
+  tags
+  |> Enum.map(fn a -> a.tag |> String.replace("-", " ") end)
+  |> Enum.reject(fn x -> x |> String.contains?(" ") end)
+  |> Enum.join("\n")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"eroeffnung\nperformance\nvortrag\nausstellung\ngespraech\nfotografie\ninstallation\nscreening\nfuehrung\ngruppenausstellung\nkonzert\ndiskussion\nmalerei\nworkshop\narchitektur\nfilm\nbuchpraesentation\nlesung\npraesentation\nfinissage\nfestival\nkino\nmusik\ndesign\ntheater\nvideo\nskulptur\nangewandte\ntanz\ntalk\nzeichnung\nkunst\npodiumsdiskussion\nsymposium\nsound\nliteratur\nparty\nvernissage\nrundgang\njubilaeum\nretrospektive\nchoreographie\ngastvortrag\nsammlung\nkuratorinnenfuehrung\nakademie\nkinder\nfoto\nkurzfilm\nkuratorenfuehrung\nvaw\ndokumentarfilm\nintervention\nstadt\nlecture\nimprovisation\nkonferenz\npanel\nfeminismus\nkuenstlergespraech\nwien\npreisverleihung\npodium\nmode\nqueer\nschiene\nkatalogpraesentation\npremiere\nkomposition\nfest\nflohmarkt\ngrafik\nillustration\nexperimental\nmigration\ngedenken\nurbanismus\npublikumsgespraech\nworkshops\nrelease\nfilmfestival\nmagazin\ncollage\nkinderprogramm\nedition\nmedienkunst\nanimation\ngames\narchiv\nkoer\nwerkschau\nkunstgeschichte\nobjekt\npublikation\neroeffnungsfilm\ncomic\nukraine\nanimationsfilm\ntext\nfilmvorfuehrung\nvermittlung\nimpulstanz\npolitik\nstudierende\ndiskurs\nthemenausstellung\nwienwoche\ntagung\nauktion\nfilmscreening\nspaziergang\nkoerper\nperformances\ndruckgrafik\nmarkt\nthemenfuehrung\ndj\nexkursion\nzine\nkunstbuch\ntour\nflucht\nchoreografie\nair\ndjs\ngeschichte\nobjekte\nkonzerte\nausstellungseroeffnung\naktivismus\nfuehrungen\ngratis\nbrut\nraum\npersonale\nmatinee\nurauffuehrung\nvortraege\npreview\nforschung\nstummfilm\natelier\nshuttlebus\nbildhauerei\nkunstvermittlung\nsommerfest\nkuenstlerbuch\npodiumsgespraech\nvideoinstallation\nstadtentwicklung\noesterreich\nmedien\ntechnologie\nbenefiz\njapan\nfashion\nkuration\ndruck\nringvorlesung\nrepraesentation\nmuseum\nerinnerung\nfahrrad\niran\nsprache\nmultimedia\ndatenschutz\npartizipation\nbuch\nkuenstlerinnengespraech\nnachbarschaft\nkeramik\nkolonialismus\ngalerien\nprint\ntextil\nbuchvorstellung\nschauspiel\nmaterial\nessen\nsonderausstellung\nchina\nwissenschaft\nprojektion\nzeichnungen\neinzelausstellung\neuropa\nsprachkunst\nbrunch\njugendliche\nkurzfilme\narbeit\nlive\nmonochrom\ndiy\nkunstmesse\ngraffiti\nnationalsozialismus\nwiedereroeffnung\nmesse\nhorror\nkunstmarkt\npsychoanalyse\nnatur\nlicht\nmak\nkulturpolitik\nmoebel\nklangkunst\nfrauen\nkunsthalle\noegfa\nviennale\nheftpraesentation\nkunstsalon\nstudenten\nmoderne\nsommerkino\nkulturkontakt\ndokumentation\nmusiktheater\nhandwerk\ngender\nabschlussarbeiten\nphilosophie\nrauminstallation\nwettbewerb\nschaufenster\nlandschaft\navantgarde\nholocaust\ndigitalisierung\ncharity\ndialogfuehrung\ngalerie\nvintage\nneuaufstellung\nsalon\nantisemitismus\nzeitgeschichte\ntanzquartier\ngarten\nimagetanz\ninterventionen\nav\nneueroeffnung\nbildung\ntalks\nausstellungen\nbar\nspiel\nwiderstand\nkatalog\ninstallationen\nresidency\ndepot\nkabarett\nsiebdruck\nvisuals\nbiennale\nnachhaltigkeit\nausstellungsgespraech\nclub\nfilmreihe\nchor\nprotest\nfotobuch\npoesie\npapier\nkrieg\ngesellschaft\nvortragsreihe\nklanginstallation\nplakat\npraesentationen\nprojektpraesentation\nskulpturen\neikon\nlyrik\nstream\ngemeindebau\nspiele\nberlin\ndiversitaet\nvinyl\ntuerkei\numwelt\npopkultur\nlesungen\nvorlesung\nfestwochen\nrestaurierung\nfotoausstellung\nkunstkritik\nkarikatur\nsilvester\ncomics\nfamilie\nzeitschrift\nfruehstueck\nkonservierung\nrahmenprogramm\npride\nwerkstatt\ndialog\nkundgebung\npop\nmumok\ngalerienfestival\nmexiko\nstadtplanung\nurbanize\nstrassenfest\nidentitaet\nradio\ndemokratie\ngame\nquintessenz\nwohnbau\nkuenstlerinnen\nbibliothek\nerinnerungskultur\nanalog\nschnittpunkt\nzamspielen\nmenschenrechte\noekologie\nfilmabend\nsaisoneroeffnung\nurheberrecht\nafrika\nteilhabe\njugend\naustausch\nlabor\nsonderprogramm\nkultur\nsoundperformance\ngemaeldegalerie\nfilmprogramm\nroundtable\nderive\nesel\nklimawandel\nkuenstlerhaus\naktion\nlichtinstallation\nvideokunst\nplakate\nklang\ntechnik\nsymposion\nexperimentalfilm\nsoundart\nvernetzung\nungarn\nwerkstattgespraech\njahresausstellung\ndiaspora\ndeparture\nhommage\ndematerialisierung\nlinz\nkonzeptkunst\narchitekturfilm\ntypografie\nvienna\njugoslawien\nfilmpremiere\nutopie\nwanderausstellung\ninternet\nelektronik\ntransarts\nfluc\nwissenstransfer\ndiskussionen\nspezialfuehrung\nitalien\nmedientheorie\ngespraeche\ntonspur\ngelatin\nmobilitaet\natelierbesuch\ncomedy\nnoise\nschweiz\nhoerspiel\nsoundinstallation\nart\nkommunikation\nfigurent" <> ...
+```
+
+```elixir
+Kino.Download.new(
+  fn -> output_content <> "\n" end,
+  filename: "singleword_tags.txt",
+  label: "Tags Text File"
+)
+```
+
+```elixir
+tags
+|> Enum.take(100)
+|> Enum.map(fn tag -> tag |> Map.put(:label, Helper.get_label_for_string(tag.tag)) end)
+|> Enum.map(fn tag -> tag |> Map.put(:lemma, Helper.get_lemma_for_string(tag.tag)) end)
+|> Kino.DataTable.new()
+```

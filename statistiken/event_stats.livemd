@@ -1,0 +1,21 @@
+# event_stats
+
+```elixir
+require Ash.Query
+```
+
+## Section
+
+```elixir
+MyApp.LegacyEvent
+|> Ash.Query.filter(category == "" or is_nil(category))
+|> MyApp.Api.count!()
+```
+
+Hier hab ich versucht, alle Events zu zählen, die ~N[2018-03-27 02:00:00] als "End" haben. Hab's no ned hinbekommen.
+
+```elixir
+MyApp.LegacyEvent
+|> Ash.Query.filter(:end == "~N[2018-03-27 02:00:00]")
+|> MyApp.Api.count!()
+```

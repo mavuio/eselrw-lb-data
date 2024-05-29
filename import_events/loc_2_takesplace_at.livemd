@@ -1,0 +1,86 @@
+# location nach "takes place at"
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+require Ash.Query
+```
+
+## Section
+
+```elixir
+defmodule MakeTakesPlaceAt do
+  def handle_event(ev_id) do
+    ev = Event.get_by_id!(ev_id, load: [:arrows_ab])
+
+    takes_place_at_uuid = "at_02wBBaoyaFfNbbdjutDYyi" |> MavuTags.to_plain_uuid()
+
+    # {arrows_ab, discipline_uuids} =
+    #   event_ids
+    #   |> Enum.reduce({[], []}, fn event_id, {arrows_ab, discipline_uuids} ->
+    #     Event.get_by_legacy_event_id(event_id)
+    #     |> case do
+    #       {:ok, event} ->
+    #         event_uuid = event.id |> MavuTags.to_plain_uuid()
+
+    #         arrows_ab2 = [
+    #           %{
+    #             "arrow_type" => artist_at_uuid,
+    #             "source_a" => agent_uuid,
+    #             "source_b" => event_uuid
+    #           }
+    #           | arrows_ab
+    #         ]
+
+    #         discipline_uuids2 =
+    #           discipline_uuids ++
+    #             event.artdisciplines_major
+
+    ev_uuid = ev.id |> MavuTags.to_plain_uuid()
+
+    arrows_ab =
+      for loc_uuid <- ev.locations do
+        if Enum.find(ev.arrows_ab, fn a ->
+             a.arrow_type == takes_place_at_uuid &&
+               a.source_a == ev_uuid &&
+               a.source_b == loc_uuid
+           end) do
+          nil
+        else
+          %{
+            "arrow_type" => takes_place_at_uuid,
+            "source_a" => ev_uuid,
+            "source_b" => loc_uuid
+          }
+        end
+      end
+      |> Enum.reject(&is_nil/1)
+
+    case arrows_ab do
+      [_ | _] = items ->
+        ev
+        |> Ash.Changeset.for_update(:update, %{arrows_ab: arrows_ab, locations: []})
+        |> Ash.update!()
+
+      _ ->
+        :nope
+    end
+  end
+end
+```
+
+```elixir
+# MakeTakesPlaceAt.handle_event("ev_02v5OYQJAWOsVkEA0ylSnj")
+```
+
+```elixir
+events =
+  Event
+  |> Ash.Query.filter(not is_nil(locations))
+  |> Ash.read!()
+  |> Enum.filter(fn x -> length(x.locations) > 0 end)
+  |> Enum.take(20)
+  |> Enum.map(fn a -> MakeTakesPlaceAt.handle_event(a.id) end)
+```

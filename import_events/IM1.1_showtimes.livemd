@@ -1,0 +1,85 @@
+# [IM1.1] Import Showtimes for legacy-events
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+IEx.configure(inspect: [charlists: :as_lists])
+IEx.configure(inspect: [limit: :infinity])
+require Ecto.Query
+```
+
+## Section
+
+```elixir
+defmodule ImportStModule do
+  def handle_showtime_for_record(rec) do
+    # %{
+    #   start: rec.start,
+    #   legacy_event_id: rec.id
+    # }
+
+    st = %MyApp.EmbeddedEventShowtime{datemark: rec.start |> Dates.date_to_iso_str()}
+
+    st =
+      Location.get_by_esel_legacy_id(rec.location_id)
+      |> case do
+        {:ok, loc} ->
+          st |> Map.put(:location, loc.id |> MavuTags.to_plain_uuid())
+
+        {:error, error_info} ->
+          st
+      end
+
+    # |>MavuUtils.log("mwuits-debug 2024-03-20_19:11 #{elem(__ENV__.function, 0)}(): ", :info)
+
+    Event.get_by_legacy_event_id(rec.id)
+    |> case do
+      {:ok, rec} ->
+        rec
+        |> Ash.Changeset.for_update(:update, %{
+          showtimes: [st]
+        })
+        |> Api.update()
+        |> case do
+          {:ok, ev} ->
+            %{state: :ok, msg: "event #{rec.id} #{ev.id} updated "}
+
+          {:error, _error_info} ->
+            %{state: :error, msg: "error on event #{rec.id} "}
+        end
+
+      {:error, _error_info} ->
+        %{state: :error, msg: "event #{rec.id} not found "}
+    end
+  end
+end
+```
+
+```elixir
+rec = Event.get_by_legacy_event_id!(1756)
+
+loc = Location.get_by_id!("018e5ce8-e16f-797b-b397-7e11f3e2a5ae")
+# st = %MyApp.EmbeddedEventShowtime{datemark: rec.start |> Dates.date_to_iso_str()}
+
+#     st=
+#       Location.get_by_esel_legacy_id(rec.location_id)
+#      |> case do
+#       {:ok, loc} ->
+#         st |> Map.put(:location,loc.id)
+#       {:error, error_info} ->
+#         st
+#     end
+```
+
+```elixir
+LegacyEventImport.get_rows_as_stream(
+  # fn q-> q  |> Ecto.Query.where([a],a.id ==  1756) end
+)
+|> Stream.map(&ImportStModule.handle_showtime_for_record/1)
+# |> Enum.take(10)
+|> Enum.into([])
+|> length()
+
+# |> Kino.DataTable.new()
+```

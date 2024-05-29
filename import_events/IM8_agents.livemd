@@ -1,0 +1,556 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# [IM8] Agents
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+import Ecto.Query
+```
+
+## Section
+
+```elixir
+defmodule AgentHelper do
+  def extract_names({legacy_event_id, performers}) do
+    ["#{performers}"]
+    |> CSV.decode()
+    |> Enum.into(%{})
+    |> case do
+      %{ok: tagstrings} ->
+        tagstrings
+
+      _ ->
+        []
+    end
+    |> Enum.map(&handle_name(&1, legacy_event_id))
+    |> Enum.reject(fn %{slug: slug} -> MavuUtils.empty?(slug) end)
+  end
+
+  def handle_name(name, legacy_event_id) do
+    clean_name =
+      name
+      |> String.replace(~w(ä Ä), "ae")
+      |> String.replace(~w(ö Ö), "oe")
+      |> String.replace(~w(ü Ü), "ue")
+      |> Slug.slugify()
+
+    %{slug: clean_name, name: name |> String.trim(), legacy_event_id: legacy_event_id}
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, AgentHelper, <<70, 79, 82, 49, 0, 0, 11, ...>>, {:handle_name, 2}}
+```
+
+```elixir
+imported_agents =
+  MyApp.LegacyEvent
+  |> select([e], {e.id, e.performer})
+  |> where([e], not is_nil(e.performer))
+  # |> limit(1000)
+  |> Repo.all()
+  |> Enum.flat_map(&AgentHelper.extract_names/1)
+  |> Enum.group_by(& &1.slug)
+  |> Enum.map(fn {slug, recs} ->
+    legacy_event_ids = recs |> Enum.map(& &1.legacy_event_id) |> Enum.uniq()
+
+    rec = %{
+      slug: slug,
+      names: recs |> Enum.map(& &1.name) |> Enum.uniq(),
+      legacy_event_ids: legacy_event_ids,
+      count: length(legacy_event_ids)
+    }
+
+    {slug, rec}
+  end)
+  |> Map.new()
+
+# |> Enum.sort_by(& &1.count, :desc)
+# |> Kino.DataTable.new()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%{
+  "olga-micinska" => %{
+    count: 1,
+    names: ["Olga Micińska"],
+    slug: "olga-micinska",
+    legacy_event_ids: [116434]
+  },
+  "olivia-erlanger" => %{
+    count: 1,
+    names: ["Olivia Erlanger"],
+    slug: "olivia-erlanger",
+    legacy_event_ids: [115038]
+  },
+  "sevda-chkoutova" => %{
+    count: 2,
+    names: ["Sevda Chkoutova"],
+    slug: "sevda-chkoutova",
+    legacy_event_ids: [115005, 115104]
+  },
+  "lauren-nickou" => %{
+    count: 3,
+    names: ["Lauren Nickou"],
+    slug: "lauren-nickou",
+    legacy_event_ids: [120474, 120981, 110274]
+  },
+  "si-si-klocker" => %{
+    count: 1,
+    names: ["SI. SI. Klocker"],
+    slug: "si-si-klocker",
+    legacy_event_ids: [111723]
+  },
+  "barbara-haid" => %{
+    count: 1,
+    names: ["Barbara Haid"],
+    slug: "barbara-haid",
+    legacy_event_ids: [122248]
+  },
+  "vlad-beronja" => %{
+    count: 1,
+    names: ["Vlad Beronja"],
+    slug: "vlad-beronja",
+    legacy_event_ids: [120596]
+  },
+  "andrea-ivanovic-jaksic" => %{
+    count: 3,
+    names: ["Andrea Ivanović Jakšić"],
+    slug: "andrea-ivanovic-jaksic",
+    legacy_event_ids: [117839, 121481, 122056]
+  },
+  "albrecht-schuch" => %{
+    count: 1,
+    names: ["Albrecht Schuch"],
+    slug: "albrecht-schuch",
+    legacy_event_ids: [106538]
+  },
+  "katherina-deutsch" => %{
+    count: 1,
+    names: ["Katherina Deutsch"],
+    slug: "katherina-deutsch",
+    legacy_event_ids: [113139]
+  },
+  "annette-tesarek" => %{
+    count: 1,
+    names: ["Annette Tesarek"],
+    slug: "annette-tesarek",
+    legacy_event_ids: [111114]
+  },
+  "b-ingrid-olson" => %{
+    count: 4,
+    names: ["B. Ingrid Olson"],
+    slug: "b-ingrid-olson",
+    legacy_event_ids: [114399, 114991, 122556, 114129]
+  },
+  "margareta-sandhofer" => %{
+    count: 1,
+    names: ["Margareta Sandhofer"],
+    slug: "margareta-sandhofer",
+    legacy_event_ids: [113704]
+  },
+  "hans-stefan-moritsch" => %{
+    count: 1,
+    names: ["Hans Stefan Moritsch"],
+    slug: "hans-stefan-moritsch",
+    legacy_event_ids: [116536]
+  },
+  "inn-wien-ensemble" => %{
+    count: 1,
+    names: ["inn.wien ensemble"],
+    slug: "inn-wien-ensemble",
+    legacy_event_ids: [112944]
+  },
+  "hans-kelsen" => %{
+    count: 1,
+    names: ["Hans Kelsen"],
+    slug: "hans-kelsen",
+    legacy_event_ids: [110503]
+  },
+  "christa-l-wall" => %{
+    count: 1,
+    names: ["Christa.l Wall"],
+    slug: "christa-l-wall",
+    legacy_event_ids: [113894]
+  },
+  "martin-mackowitz" => %{
+    count: 1,
+    names: ["Martin Mackowitz"],
+    slug: "martin-mackowitz",
+    legacy_event_ids: [112844]
+  },
+  "katrin-euller" => %{
+    count: 7,
+    names: ["Katrin Euller"],
+    slug: "katrin-euller",
+    legacy_event_ids: [114550, 118482, 120659, 121899, 111265, 112499, 112319]
+  },
+  "leslie-de-chavez" => %{
+    count: 1,
+    names: ["Leslie de Chavez"],
+    slug: "leslie-de-chavez",
+    legacy_event_ids: [113091]
+  },
+  "omar-albajare" => %{
+    count: 1,
+    names: ["Omar Albajare"],
+    slug: "omar-albajare",
+    legacy_event_ids: [113143]
+  },
+  "adrian-schiess" => %{
+    count: 2,
+    names: ["Adrian Schiess"],
+    slug: "adrian-schiess",
+    legacy_event_ids: [122778, 110983]
+  },
+  "barbara-morgenstern" => %{
+    count: 1,
+    names: ["Barbara Morgenstern"],
+    slug: "barbara-morgenstern",
+    legacy_event_ids: [112762]
+  },
+  "philipp-reichel-neuwirth" => %{
+    count: 3,
+    names: ["Philipp Reichel-Neuwirth"],
+    slug: "philipp-reichel-neuwirth",
+    legacy_event_ids: [114223, 114040, 114078]
+  },
+  "johanna-loeffl" => %{
+    count: 1,
+    names: ["Johanna Löffl"],
+    slug: "johanna-loeffl",
+    legacy_event_ids: [112446]
+  },
+  "maschek" => %{count: 2, names: ["Maschek"], slug: "maschek", legacy_event_ids: [109543, 111843]},
+  "gergo-d-farkas" => %{
+    count: 1,
+    names: ["Gergo D. Farkas"],
+    slug: "gergo-d-farkas",
+    legacy_event_ids: [113023]
+  },
+  "simon-mayer" => %{
+    count: 6,
+    names: ["Simon Mayer"],
+    slug: "simon-mayer",
+    legacy_event_ids: [117740, 107065, 109997, 111329, 114043, 114081]
+  },
+  "sara-shaoul" => %{
+    count: 1,
+    names: ["Sara Shaoul"],
+    slug: "sara-shaoul",
+    legacy_event_ids: [122459]
+  },
+  "daniel-hoesl" => %{
+    count: 1,
+    names: ["Daniel Hoesl"],
+    slug: "daniel-hoesl",
+    legacy_event_ids: [109859]
+  },
+  "jerome-meinlschmidt" => %{
+    count: 1,
+    names: ["Jerome Meinlschmidt"],
+    slug: "jerome-meinlschmidt",
+    legacy_event_ids: [114514]
+  },
+  "manuel-cyrill-bachinger" => %{
+    count: 2,
+    names: ["Manuel Cyrill Bachinger"],
+    slug: "manuel-cyrill-bachinger",
+    legacy_event_ids: [119359, 119869]
+  },
+  "madame-lea" => %{
+    count: 1,
+    names: ["Madame Léa"],
+    slug: "madame-lea",
+    legacy_event_ids: [119346]
+  },
+  "thomas-berghammer" => %{
+    count: 1,
+    names: ["Thomas Berghammer"],
+    slug: "thomas-berghammer",
+    legacy_event_ids: [118330]
+  },
+  "marcela-suarez" => %{
+    count: 1,
+    names: ["Marcela Suárez"],
+    slug: "marcela-suarez",
+    legacy_event_ids: [113707]
+  },
+  "ivana-lazic" => %{
+    count: 7,
+    names: ["Ivana Lazic", "Ivana Lazić"],
+    slug: "ivana-lazic",
+    legacy_event_ids: [116939, 117100, 122385, 122769, 106863, 110711, 112550]
+  },
+  "ivana-pilic" => %{
+    count: 4,
+    names: ["Ivana Pilić", "Ivana Pilic"],
+    slug: "ivana-pilic",
+    legacy_event_ids: [116598, 118181, 120904, 107753]
+  },
+  "stefanie-gutheil" => %{
+    count: 2,
+    names: ["Stefanie Gutheil"],
+    slug: "stefanie-gutheil",
+    legacy_event_ids: [107396, 107667]
+  },
+  "katrin-mayer" => %{
+    count: 1,
+    names: ["Katrin Mayer"],
+    slug: "katrin-mayer",
+    legacy_event_ids: [105962]
+  },
+  "viktor-szeri" => %{
+    count: 1,
+    names: ["Viktor Szeri"],
+    slug: "viktor-szeri",
+    legacy_event_ids: [122335]
+  },
+  "alice-rawsthorn" => %{
+    count: 1,
+    names: ["Alice Rawsthorn"],
+    slug: "alice-rawsthorn",
+    legacy_event_ids: [111479]
+  },
+  "maurice-ravel" => %{
+    count: 1,
+    names: ["Maurice Ravel"],
+    slug: "maurice-ravel",
+    legacy_event_ids: [105651]
+  },
+  "ina-ebenberger" => %{
+    count: 4,
+    names: ["Ina Ebenberger"],
+    slug: "ina-ebenberger",
+    legacy_event_ids: [114207, 112158, 112916, ...]
+  },
+  "milad-forouzandeh" => %{
+    count: 1,
+    names: ["Milad Forouzandeh"],
+    slug: "milad-forouzandeh",
+    legacy_event_ids: [111366]
+  },
+  "barbara-steiner" => %{
+    count: 2,
+    names: ["Barbara Steiner"],
+    slug: "barbara-steiner",
+    legacy_event_ids: [107640, ...]
+  },
+  "maximilian-pruefer" => %{
+    count: 2,
+    names: ["Maximilian Prüfer"],
+    slug: "maximilian-pruefer",
+    legacy_event_ids: [...]
+  },
+  "alexander-gottfarb" => %{
+    count: 3,
+    names: ["Alexander Gottfarb"],
+    slug: "alexander-gottfarb",
+    ...
+  },
+  "marc-truckenbrodt" => %{count: 1, names: [...], ...},
+  "koenig" => %{count: 1, ...},
+  "david-rooney" => %{...},
+  ...
+}
+```
+
+## Import from csv
+
+assume  this fields in csv:
+
+```
+no_of_occurencies	slugified_performer	agent_category	person_type	gender	birth_name	organization_category	organization_type	same_as	part_of	includes	merge_with	event	event_type	location	location_type
+```
+
+```elixir
+file = Kino.Input.file("Upload your file", accept: ~w(.csv))
+```
+
+```elixir
+value = Kino.Input.read(file)
+# Get the full filepath
+path = Kino.Input.file_path(value.file_ref)
+
+# Read the file contents
+content = File.read!(path)
+
+edited_agents =
+  path
+  |> File.stream!()
+  |> CSV.decode!(headers: true, separator: ?;)
+  |> Enum.take(1_000_000)
+
+edited_agents |> Kino.DataTable.new()
+```
+
+<!-- livebook:{"output":true} -->
+
+```text
+[%{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "male", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "writer, artist", "same_as" => "", "slugified_performer" => "joerg-piringer", "\uFEFFno_of_occurencies" => "19"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "male", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "curator", "same_as" => "", "slugified_performer" => "joerg-wolfert", "\uFEFFno_of_occurencies" => "18"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "male", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "musician, artist", "same_as" => "", "slugified_performer" => "michael-fischer", "\uFEFFno_of_occurencies" => "18"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "female", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "educator, academic, curator", "same_as" => "", "slugified_performer" => "nora-sternfeld", "\uFEFFno_of_occurencies" => "15"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "female", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "artist, writer, researcher", "same_as" => "", "slugified_performer" => "belinda-kazeem-kaminski", "\uFEFFno_of_occurencies" => "15"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "female", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "curator, academic", "same_as" => "", "slugified_performer" => "elke-krasny", "\uFEFFno_of_occurencies" => "15"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "male", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "tracing-spaces", "person_type" => "artist", "same_as" => "", "slugified_performer" => "michael-zinganel", "\uFEFFno_of_occurencies" => "15"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "male", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "artist", "same_as" => "", "slugified_performer" => "oscar-cueto", "\uFEFFno_of_occurencies" => "15"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "female", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "artist", "same_as" => "", "slugified_performer" => "margot-pilz", "\uFEFFno_of_occurencies" => "14"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "male", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "lecturer, writer", "same_as" => "", "slugified_performer" => "gerald-bast", "\uFEFFno_of_occurencies" => "14"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "male", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "artist", "same_as" => "", "slugified_performer" => "alexandru-cosarca", "\uFEFFno_of_occurencies" => "14"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "female", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "artist", "same_as" => "", "slugified_performer" => "mikki-muhr", "\uFEFFno_of_occurencies" => "14"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "male", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "artist, photographer", "same_as" => "", "slugified_performer" => "esel", "\uFEFFno_of_occurencies" => "13"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "female", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "artist, lecturer, educator", "same_as" => "", "slugified_performer" => "marina-grzinic", "\uFEFFno_of_occurencies" => "13"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "male", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "curator, researcher", "same_as" => "", "slugified_performer" => "guenther-oberhollenzer", "\uFEFFno_of_occurencies" => "13"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "male", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "tracing-spaces", "person_type" => "artist", "same_as" => "", "slugified_performer" => "michael-hieslmair", "\uFEFFno_of_occurencies" => "13"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "male", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "artist", "same_as" => "", "slugified_performer" => "julius-deutschbauer", "\uFEFFno_of_occurencies" => "12"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "female", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "artist", "same_as" => "", "slugified_performer" => "claudia-bosse", "\uFEFFno_of_occurencies" => "12"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "female", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "artist", "same_as" => "", "slugified_performer" => "elisabeth-von-samsonow", "\uFEFFno_of_occurencies" => "12"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "female", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "artist, lecturer", "same_as" => "", "slugified_performer" => "claudia-lomoschitz", "\uFEFFno_of_occurencies" => "12"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "female", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "curator, educator", "same_as" => "", "slugified_performer" => "katja-stecher", "\uFEFFno_of_occurencies" => "12"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "female", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "artist", "same_as" => "", "slugified_performer" => "luisa-huebner", "\uFEFFno_of_occurencies" => "11"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "male", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "curator, researcher", "same_as" => "", "slugified_performer" => "klaus-speidel", "\uFEFFno_of_occurencies" => "11"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "female", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "artist", "same_as" => "", "slugified_performer" => "denise-palmieri", "\uFEFFno_of_occurencies" => "11"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "queer", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "artist", "same_as" => "", "slugified_performer" => "faris-cuchi-gezahegn", "\uFEFFno_of_occurencies" => "11"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "male", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "educator", "same_as" => "", "slugified_performer" => "patrick-puls", "\uFEFFno_of_occurencies" => "11"}, %{"agent_category" => "", "birth_name" => "", "event" => "Vienna Art Week", "event_type" => "art_festival", "gender" => "", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "", "same_as" => "", "slugified_performer" => "vienna-art-week", "\uFEFFno_of_occurencies" => "11"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "male", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "artist", "same_as" => "", "slugified_performer" => "kilian-joerg", "\uFEFFno_of_occurencies" => "11"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "female", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "curator", "same_as" => "", "slugified_performer" => "marlies-wirth", "\uFEFFno_of_occurencies" => "11"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "female", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "artist", "same_as" => "", "slugified_performer" => "anna-barbieri", "\uFEFFno_of_occurencies" => "10"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "female", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "author", "same_as" => "", "slugified_performer" => "barbi-markovic", "\uFEFFno_of_occurencies" => "10"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "male", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "curator", "same_as" => "", "slugified_performer" => "florian-malzacher", "\uFEFFno_of_occurencies" => "10"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "female", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "artist", "same_as" => "", "slugified_performer" => "roberta-lima", "\uFEFFno_of_occurencies" => "10"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "female", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "artist", "same_as" => "", "slugified_performer" => "guadalupe-aldrete", "\uFEFFno_of_occurencies" => "10"}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "female", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "curator, researcher", "same_as" => "", "slugified_performer" => "luisa-ziaja", ...}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "male", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "artist", "same_as" => "", ...}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "female", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", "person_type" => "artist", ...}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "female", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", "part_of" => "", ...}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "female", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", "organization_type" => "", ...}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "male", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", "organization_category" => "", ...}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "queer", "includes" => "", "location" => "", "location_type" => "", "merge_with" => "", ...}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "female", "includes" => "", "location" => "", "location_type" => "", ...}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "female", "includes" => "", "location" => "", ...}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "female", "includes" => "", ...}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", "gender" => "male", ...}, %{"agent_category" => "person", "birth_name" => "", "event" => "", "event_type" => "", ...}, %{"agent_category" => "person", "birth_name" => "", "event" => "", ...}, %{"agent_category" => "person", "birth_name" => "", ...}, %{"agent_category" => "person", ...}, %{...}, ...]
+```
+
+```elixir
+defmodule AgentImporter do
+  def import_edited_agent(item, imported_agents) do
+    typestr =
+      (item["person_type"] <> "," <> item["organization_type"])
+      |> case do
+        "," -> "artist"
+        str -> str
+      end
+
+    person_type_tags = get_tags(typestr)
+    gender_tags = get_tags(item["gender"] <> "," <> item["organization_category"])
+    main_slug = item["slugified_performer"]
+
+    slugs =
+      if MavuUtils.present?(item["same_as"]) do
+        [main_slug] ++
+          (item["same_as"]
+           |> String.split(",", trim: true))
+      else
+        [main_slug]
+      end
+
+    matching_agents =
+      slugs
+      |> Enum.map(fn slug -> imported_agents[slug] end)
+      |> Enum.reject(&is_nil/1)
+
+    names =
+      (Enum.flat_map(matching_agents, fn a -> a[:names] || [] end) ++
+         [item["birth_name"]])
+      |> Enum.uniq()
+      |> Enum.reject(&MavuUtils.empty?/1)
+
+    # merge_with ??
+    # part_of ??
+    # includes ??
+    # event ??
+    # event_type ??
+    # location ??
+    # location_type ??
+
+    rec = %{
+      slug: main_slug,
+      names:
+        names
+        |> Enum.map(fn name ->
+          rec = %{"text" => name}
+
+          if name == item["birth_name"] do
+            rec |> Map.put("type", MavuTags.get_tag_by_uuid_or_slug("birth_name")[:id])
+          else
+            rec
+          end
+        end),
+      agenttypes: person_type_tags |> Enum.map(fn tag_id -> %{"type" => tag_id} end),
+      genders: gender_tags |> Enum.map(fn tag_id -> %{"type" => tag_id} end),
+      title: names |> hd(),
+      type: String.to_existing_atom(item["agent_category"])
+    }
+
+    Agent
+    |> Ash.Changeset.for_create(:create, rec)
+    |> Ash.create!(upsert?: true, upsert_identity: :slug)
+    |> add_events(matching_agents)
+  end
+
+  def add_events(saved_agent, matching_agents) do
+    agent_uuid = saved_agent.id |> MavuTags.to_plain_uuid()
+
+    event_ids =
+      Enum.flat_map(matching_agents, & &1.legacy_event_ids)
+      |> Enum.uniq()
+
+    artist_at_uuid = "at_02wB5UUMxUCFhOe1bUDhNh" |> MavuTags.to_plain_uuid()
+
+    {arrows_ab, discipline_uuids} =
+      event_ids
+      |> Enum.reduce({[], []}, fn event_id, {arrows_ab, discipline_uuids} ->
+        Event.get_by_legacy_event_id(event_id)
+        |> case do
+          {:ok, event} ->
+            event_uuid = event.id |> MavuTags.to_plain_uuid()
+
+            arrows_ab2 = [
+              %{
+                "arrow_type" => artist_at_uuid,
+                "source_a" => agent_uuid,
+                "source_b" => event_uuid
+              }
+              | arrows_ab
+            ]
+
+            discipline_uuids2 =
+              discipline_uuids ++
+                event.artdisciplines_major
+
+            {arrows_ab2, discipline_uuids2}
+
+          _ ->
+            {arrows_ab, discipline_uuids}
+        end
+      end)
+
+    artdisciplines_major =
+      discipline_uuids
+      |> Enum.uniq()
+      |> Enum.reject(&is_nil/1)
+      |> Enum.map(fn tag_id -> %{"type" => tag_id} end)
+
+    params = %{"arrows_ab" => arrows_ab, "artdisciplines_major" => artdisciplines_major}
+
+    # params |> MavuUtils.log("EVENTS", :info)
+    saved_agent
+    |> Ash.Changeset.for_update(:update, params)
+    |> Ash.update!()
+  end
+
+  def get_tags(str) do
+    (str || "")
+    |> String.split(",", trim: true)
+    |> Enum.map(fn a -> MavuTags.get_tag_by_uuid_or_slug(a)[:id] end)
+    |> Enum.reject(&is_nil/1)
+  end
+
+  def get_name_from_slug(slug) do
+    slug
+    |> String.split("-")
+    |> Enum.map(fn a -> a |> String.capitalize() end)
+    |> Enum.join(" ")
+  end
+
+  # assign old events
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, AgentImporter, <<70, 79, 82, 49, 0, 0, 32, ...>>, {:get_name_from_slug, 1}}
+```
+
+```elixir
+edited_agents
+|> Enum.filter(fn x -> MavuUtils.present?(x["agent_category"]) end)
+# |> Enum.filter(fn x-> MavuUtils.empty?(x["person_type"]) && MavuUtils.empty?(x["organization_type"]) end)
+# |> Enum.take(2)
+|> Enum.map(fn a -> AgentImporter.import_edited_agent(a, imported_agents) end)
+|> length()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+11003
+```

@@ -1,0 +1,114 @@
+# IM4.1 location-disciplines
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+IEx.configure(inspect: [charlists: :as_lists])
+require Ash.Query
+require Ecto.Query
+```
+
+## Section
+
+```elixir
+defmodule ImportDisciplinesModule do
+  def handle_disciplines_for_location(loc) do
+    #  Event.get_events_for_location!(loc.id) |> hd()
+    disciplines = ImportDisciplinesModule.get_disciplines_for_location(loc.id)
+    MavuUtils.log("❖ #{loc.title}", :info)
+
+    params = %{
+      artdisciplines_major:
+        Enum.filter(disciplines, &(&1.type == "major"))
+        |> Enum.map(& &1.slug)
+        |> ImportDisciplinesModule.to_uuids(),
+      artdisciplines_minor:
+        Enum.filter(disciplines, &(&1.type == "minor"))
+        |> Enum.map(& &1.slug)
+        |> ImportDisciplinesModule.to_uuids()
+    }
+
+    loc
+    |> Ash.Changeset.for_update(:update, params)
+    |> Api.update()
+    |> case do
+      {:ok, loc} ->
+        %{state: :ok, msg: "loc #{loc.id} updated "}
+
+      {:error, _error_info} ->
+        %{state: :error, msg: "error on loc #{loc.id} "}
+    end
+  end
+
+  def get_disciplines_for_location(loc_id) do
+    {minor, major} =
+      Event.get_events_for_location!(loc_id)
+      |> Enum.reduce({[], []}, fn ev, {minor, major} ->
+        {minor ++ to_slugs(ev.artdisciplines_minor), major ++ to_slugs(ev.artdisciplines_major)}
+      end)
+
+    minors = Enum.frequencies(minor)
+    majors = Enum.frequencies(major)
+
+    all_tags = (Map.keys(minors) ++ Map.keys(majors)) |> Enum.uniq()
+
+    all_tags
+    |> Enum.map(fn slug ->
+      %{
+        slug: slug,
+        minor: minors[slug] || 0,
+        major: majors[slug] || 0
+      }
+    end)
+    |> Enum.map(fn a ->
+      a
+      |> Map.put(
+        :type,
+        if(a.minor > a.major, do: "minor", else: "major")
+      )
+    end)
+    |> Enum.sort_by(fn x -> x.major + x.minor end, :desc)
+
+    # Map.merge(minor, major, fn
+    #   _key, val1, val2 -> %{minor: val1, major: val2}
+    # end)
+  end
+
+  def to_slugs(nil), do: []
+
+  def to_slugs(tag_ids) when is_list(tag_ids) do
+    for tag_id <- tag_ids do
+      MavuTags.get_tag_by_uuid_or_slug(tag_id)
+      |> case do
+        nil -> nil
+        tag -> tag.slug
+      end
+    end
+  end
+
+  def to_uuids(slugs) when is_list(slugs) do
+    for slug <- slugs do
+      MavuTags.get_tag_by_uuid_or_slug(slug)
+      |> case do
+        nil -> nil
+        tag -> tag.id |> MavuTags.to_plain_uuid()
+      end
+    end
+  end
+end
+```
+
+```elixir
+loc = Location.get_by_id!("loc_02w3FIYV9quGptEFiwh93K")
+```
+
+```elixir
+# loc_uuid="loc_02w3FIYV9quGptEFiwh93K" |> MavuTags.to_plain_uuid()
+Location.get_rows_as_stream(
+  # fn q-> q |> Ecto.Query.where(id: ^loc_uuid)  end
+)
+|> Stream.map(&ImportDisciplinesModule.handle_disciplines_for_location/1)
+|> Enum.take(3000)
+|> Stream.run()
+```

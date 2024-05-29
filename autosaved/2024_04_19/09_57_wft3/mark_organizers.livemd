@@ -1,0 +1,30 @@
+# mark_organizers
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+require Ecto.Query
+require Ash.Query
+```
+
+## Section
+
+Regel von Huhn:
+
+```
+# if organization is artist_group OR performing_arts_group OR ensemble_music then relation "artist at"
+# if organization is (anything else) then relation "organizer of" 
+```
+
+```elixir
+# alle agents wurde per default als "artist_at" zu den events related
+
+Agent
+|> Ash.Query.filter()
+|> Ash.Query.filter(is_active: true)
+|> Ash.Query.limit(10)
+|> Ash.Query.sort(id: :desc)
+|> Ash.read!()
+```

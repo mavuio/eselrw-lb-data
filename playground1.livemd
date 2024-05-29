@@ -1,0 +1,34 @@
+# Spielwiese1
+
+## Section
+
+```elixir
+locations =
+  MyApp.Location
+  # |> Ash.Query.filter(id > 10)
+  # |> Ash.Query.filter(is_active: true)
+  |> Ash.Query.limit(10)
+  # |> Ash.Query.sort(id: :desc)
+  |> MyApp.Api.read!()
+```
+
+#sdassa
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+```elixir
+words =
+  locations
+  |> Enum.map(fn a -> a.title end)
+  |> Enum.map(fn title -> String.split(title) end)
+  |> List.flatten()
+  |> Enum.take(1000)
+  # hier uip\
+  |> Enum.uniq()
+  |> Enum.sort()
+```
+
+```elixir
+"sassa" -=? "hhase",
+"sassa" -=? "hhase",
+"sassa" -=? "hhase","sassa" -=? "hhase",
+```

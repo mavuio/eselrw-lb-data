@@ -1,0 +1,19 @@
+# import_events_from_mysql
+
+## Section
+
+```elixir
+# how many do we have in legacy ?
+MyApp.LegacyMysqlEvent
+|> MyApp.LegacyRepo.aggregate(:count)
+```
+
+```elixir
+# how many legacy events do we have in rewind ?
+MyApp.LegacyEvent
+|> MyApp.Repo.aggregate(:count)
+```
+
+```elixir
+MyApp.LegacyEventImport.import_n(100_000)
+```

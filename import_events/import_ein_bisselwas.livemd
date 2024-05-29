@@ -1,0 +1,35 @@
+# import eines einzelnen events (test)
+
+```elixir
+require Ash.Query
+
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+import HappyWith
+```
+
+## Section
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+```
+
+```elixir
+MyApp.LegacyEvent
+|> Ash.Query.filter(category: "Uhu Diskurs")
+# |> MyApp.Api.count!()
+# |> Ash.Query.limit(1000)
+# |> Ash.Query.sort(id: :desc)
+|> MyApp.Api.read!()
+|> Enum.map(fn a -> LegacyEventToRealEvent.make_real_event(a) end)
+
+# |> Enum.map(fn {:ok,rec} -> Map.put(rec, :errmsg, nil)
+#             {:error,{rec,errmsg}} -> Map.put(rec, :errmsg, errmsg)
+#  end)
+# |> Enum.filter(&( &1.state==:error ))
+# |> Kino.DataTable.new(keys: ~w(title state errmsg)a)
+```

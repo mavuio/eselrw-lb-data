@@ -1,0 +1,33 @@
+# set esel_legacy_id from legacy_event_id
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+IEx.configure(inspect: [charlists: :as_lists])
+import Ash.Query
+```
+
+## Section
+
+```elixir
+query =
+  MyApp.Event
+  |> filter(legacy_event_id > 1 and is_nil(esel_legacy_id))
+```
+
+```elixir
+query
+|> Ash.count!()
+```
+
+```elixir
+query
+|> limit(10000)
+|> Ash.read!()
+|> Enum.map(fn rec ->
+  rec
+  |> Ash.Changeset.for_update(:update, %{esel_legacy_id: rec.legacy_event_id})
+  |> Ash.update!()
+end)
+```

@@ -1,0 +1,7 @@
+# spielwiese
+
+## Section
+
+```elixir
+MyApp.LegacyEvent.read1000!() |> hd()
+```

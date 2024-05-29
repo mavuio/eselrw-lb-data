@@ -1,0 +1,111 @@
+# [IM2] from_viech_to_tag
+
+```elixir
+require Ash.Query
+require Ecto.Query
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+```
+
+## Section
+
+```elixir
+MyApp.LegacyEvent
+|> Ecto.Query.group_by([e], e.category)
+|> Ecto.Query.select([e], %{category: e.category, count: count(e.id)})
+|> Ecto.Query.order_by(desc: :count)
+|> MyApp.Repo.all()
+|> Kino.DataTable.new()
+```
+
+```elixir
+defmodule EasyTagger do
+  def get_tag(slug) do
+    MyApp.MavuTags.get_tag_by_uuid_or_slug(slug)
+  end
+
+  def tag_exists?(slug) do
+    get_tag("#{slug}")
+    |> case do
+      nil -> false
+      _ -> true
+    end
+  end
+end
+```
+
+**Hier die Viecher auf unsere tags mappen: ↓**
+
+```elixir
+defmodule ViechMapper do
+  def get_tags_for_viech(viech) when is_binary(viech) do
+    tag_slugs =
+      case viech do
+        "Public Access" -> ~w(public_access arts_general)a
+        "Uhu Diskurs" -> ~w(theory contemporary_art arts_general)a
+        "hAmSteR Events" -> ~w(fine_arts arts_general)a
+        "eSeL's Neugierde" -> ~w(fine_arts contemporary_art arts_general)a
+        "eSeLs Neugierde" -> ~w(fine_arts contemporary_art arts_general)a
+        "nicht in wien" -> ~w(arts_general)a
+        "nicht in Wien" -> ~w(arts_general)a
+        #   für die Legacy Categories "nicht in wien" und "nicht in Wien" haben wir keine 'neue' discipline, die müssen noch beschlagwortet werden
+        "Flimmer Ratte" -> ~w(film video arts_general)a
+        "Tauben Loge" -> ~w(performing_arts arts_general)a
+        "Kanari Klangwelten" -> ~w(music sound_art arts_general)a
+        "Gepard" -> ~w(music arts_general)a
+        "Maultier Kunst" -> ~w(fine_arts arts_general)a
+        "Ameisen Urbanismus" -> ~w(urban_studies architecture arts_general)a
+        "Pudel Design" -> ~w(design arts_general)a
+        "Eselchen Kinderprogramm" -> ~w(youth arts_general)a
+        "Nerz Techleben" -> ~w(media_tech arts_general)a
+        "Pfau Fotos" -> ~w(photography arts_general)a
+        _ -> :not_found
+      end
+
+    tag_slugs
+    |> Enum.map(fn slug -> MyApp.MavuTags.get_tag_by_uuid_or_slug("#{slug}") end)
+    |> Enum.map(fn a -> a.id end)
+    |> Enum.reject(&is_nil/1)
+  end
+
+  def set_tags_for_viech_on_event(%{e: event, le: legacy_event}) do
+    tag_ids = get_tags_for_viech(legacy_event.category)
+
+    case tag_ids do
+      [_ | _] ->
+        MyApp.MavuTags.handle_tags_on_field("add", event, tag_ids, Api, :artdisciplines_major)
+
+      _ ->
+        :nope
+    end
+  end
+end
+```
+
+```elixir
+ViechMapper.get_tags_for_viech("eSeLs Neugierde")
+```
+
+```elixir
+EasyTagger.tag_exists?("film")
+```
+
+```elixir
+q =
+  LegacyEventToRealEvent.big_ecto_query()
+  # filter all events which have a category and no artdisciplines_major yet:
+  |> Ecto.Query.where([e, le], is_nil(e.artdisciplines_major) and not is_nil(le.category))
+```
+
+```elixir
+q |> Repo.aggregate(:count)
+```
+
+```elixir
+q
+|> Repo.cursor_based_stream()
+|> Stream.map(&ViechMapper.set_tags_for_viech_on_event/1)
+|> Enum.take(2_000_000)
+|> length()
+```
