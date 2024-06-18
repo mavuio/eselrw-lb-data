@@ -48,6 +48,12 @@ query |> MyApp.Api.count!()
 
 ```elixir
 query
+|> Ash.Query.filter(is_nil(location_ids) and is_nil(organiser_ids))
+|> MyApp.Api.count!()
+```
+
+```elixir
+query
 # |> Ash.Query.limit(10000)
 |> Ash.Query.sort(id: :desc)
 |> MyApp.Api.read!()

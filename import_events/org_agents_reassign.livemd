@@ -1,0 +1,16 @@
+# neu generierte Organization Agents bleiben mit Events verknüpft (organizer od. artist)
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+require Ecto.Query
+require Ash.Query
+```
+
+## Section
+
+```elixir
+# geht bestehende relations durch
+```

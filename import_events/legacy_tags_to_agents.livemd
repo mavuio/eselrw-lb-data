@@ -84,34 +84,6 @@ mapped_tags |> Kino.DataTable.new()
 
 ```elixir
 defmodule AgentRelationImporter do
-  # def find_disciplines_and_eventtypes_for_single_tag(tagslug, tags_to_map) do
-  #   tags_to_map
-  #   |> Enum.find(&(&1.tagslug == tagslug))
-  #   |> case do
-  #     nil ->
-  #       {[], []}
-
-  #     rec ->
-  #       {rec.art_discipline_major |> get_tags_from_str(),
-  #        rec.event_type_major |> get_tags_from_str()}
-  #   end
-  # end
-
-  # def get_tags_from_str(str) do
-  #   str |> String.split(",", trim: true)
-  # end
-
-  # def find_disciplines_and_eventtypes_for_tags(tags_of_event, tags_to_map) do
-  #   {disciplines, eventtypes} =
-  #     for tagslug <- tags_of_event, reduce: {[], []} do
-  #       {acc_disciplines, acc_eventtypes} ->
-  #         {discipline, eventtype} =
-  #           find_disciplines_and_eventtypes_for_single_tag(tagslug, tags_to_map)
-
-  #         {acc_disciplines ++ List.wrap(discipline), acc_eventtypes ++ List.wrap(eventtype)}
-  #     end
-  # end
-
   def assign_agents_in_event(legacy_event, agents_to_assign) do
     tags = Helper.extract_tags(legacy_event.tags)
 
@@ -124,53 +96,44 @@ defmodule AgentRelationImporter do
           nil ->
             nil
 
-          %{agent_name: agent_name} ->
-            %{tag: tagstr, agent_name: agent_name}
+          %{agent_name: agent_name, agent_id: agent_id} ->
+            %{tag: tagstr, agent_name: agent_name, agent_id: agent_id}
         end
       end)
       |> Enum.reject(&is_nil/1)
 
-    %{
-      ev: legacy_event.title,
-      agents: agents
-    }
+    if length(agents) > 0 do
+      Event.get_by_legacy_event_id(legacy_event.id)
+      |> case do
+        {:ok, ev} ->
+          for %{agent_id: agent_id} = agentrec <- agents do
+            MyApp.Agents.assign_agent_to_event(agent_id, ev.id)
+          end
 
-    # Event.get_by_legacy_event_id(legacy_event.id)
-    # |> case do
-    #   {:ok, ev} ->
-    #     {disciplines, eventtypes} = find_disciplines_and_eventtypes_for_tags(tags, tags_to_map)
+          %{
+            ev: ev.title,
+            ev_id: ev.id,
+            agents: agents |> Enum.map(fn a -> a.agent_name end) |> Enum.join(", ")
+          }
 
-    #     for discipline_slug <- disciplines do
-    #       ev.id |> Events.add_art_discipline_major(discipline_slug)
-    #     end
-    #     for eventtype_slug <- eventtypes do
-    #       ev.id |> Events.add_eventtype_major(eventtype_slug)
-    #     end
-
-    #     %{
-    #       event_id: ev.id,
-    #       tags: tags,
-    #       disciplines: disciplines  ,
-    #       eventtypes: eventtypes 
-    #     }
-
-    #   {:error, error_info} ->
-    #     %{
-    #       event_id: "not found",
-    #       tags: tags,
-    #       disciplines: nil,
-    #       eventtypes: nil
-    #     }
-    # end
+        {:error, error_info} ->
+          %{
+            ev: "not found",
+            ev_id: nil,
+            agents: agents |> Enum.map(fn a -> a.agent_name end) |> Enum.join(", ")
+          }
+      end
+    end
   end
 end
 ```
 
 ```elixir
 MyApp.LegacyEvent
-|> limit(100_000)
+|> limit(100_000_000)
 |> Repo.all()
 |> Enum.map(&AgentRelationImporter.assign_agents_in_event(&1, mapped_tags))
-|> Enum.reject(&MavuUtils.empty?(&1.agents))
+|> Enum.reject(&is_nil/1)
+# |> Enum.reject( &MavuUtils.empty?(&1.agents))
 |> Kino.DataTable.new()
 ```
