@@ -1,0 +1,73 @@
+# assign artweek albums
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+require Ecto.Query
+require Ash.Query
+```
+
+## Section
+
+```elixir
+legacy_albums = LegacyAlbumImport.get_n(1_000_000)
+```
+
+```elixir
+# for la <- legacy_albums  do
+
+#   new_album=Album.resolve0(la.id)
+#   new_event=Event.resolve0(la.event_id)
+#   new_album[:title]|>MavuUtils.log("#clcyan   mwuits-debug 2024-07-31_21:29  ", :info)
+#   new_event[:title]|>MavuUtils.log("#clcyan   mwuits-debug 2024-07-31_21:29  ", :info)
+#   if (new_album && new_event) do
+#      MyApp.Albums.assign_album_to_event(new_album,new_event)
+#   end
+# end
+```
+
+```elixir
+artweek_events =
+  Event
+  |> Ash.Query.for_read(:mavu_list_artweekcopy)
+  |> Ash.read!(page: [limit: 20000])
+  |> Map.get(:results)
+
+#  |> length()
+```
+
+```elixir
+artweekcopy_events =
+  Event
+  |> Ash.Query.filter(like(memo, "copy of%"))
+  |> Ash.read!()
+```
+
+```elixir
+for ace <- artweekcopy_events do
+  old_ev_id = ace.memo |> String.replace("copy of ", "")
+
+  Event.resolve(old_ev_id)
+  |> case do
+    {:ok, old_ev} ->
+      arrows =
+        MyApp.Pudel.DetailEvent.get_arrows_as_map(old_ev)
+        |> Map.get(:"pictures-taken")
+
+      for a <- arrows || [] do
+        Albums.assign_album_to_event(a.id |> Album.resolve0(), ace)
+      end
+
+    {:error, _error_info} ->
+      nil
+  end
+end
+```
+
+```elixir
+for ev <- artweek_events do
+  MyApp.Pudel.DetailEvent.get_arrows_as_map(ev)["pictures taken in"]
+end
+```

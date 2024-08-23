@@ -1,0 +1,27 @@
+# alternative_location_slugs
+
+## Section
+
+```elixir
+alternative_location_slugs =
+  MyAppBe.LocationsLive.LocationAltnamesLc.get_alternative_location_slugs([])
+  |> Enum.map(fn a -> %{slug: a} end)
+
+alternative_location_slugs
+|> Kino.DataTable.new()
+```
+
+```elixir
+output_content =
+  alternative_location_slugs
+  |> CSV.encode(headers: true)
+  |> Enum.join("")
+```
+
+```elixir
+Kino.Download.new(
+  fn -> output_content end,
+  filename: "output.csv",
+  label: "Output File"
+)
+```

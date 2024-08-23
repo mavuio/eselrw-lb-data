@@ -1,0 +1,115 @@
+# album import
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+require Ecto.Query
+require Ash.Query
+import MyApp.MavuEntities.UuidGuards
+```
+
+## Section
+
+```elixir
+albums = LegacyAlbumImport.get_n(1_000_000)
+
+albums |> Kino.DataTable.new()
+```
+
+```elixir
+for a <- albums do
+  LegacyAlbumImport.import_legacy_album(a)
+end
+```
+
+```elixir
+Album
+|> Ash.Query.for_read(:read)
+|> Ash.read!()
+|> Kino.DataTable.new()
+```
+
+```elixir
+albums=MyApp.Album 
+ |> Ash.Query.for_read(:read) 
+ |> Ash.Query.load([:count_of_photos])
+ |> Ash.Query.filter(count_of_photos>0)
+ |> Ash.read!()
+ |> Enum.map(fn a -> a  |> Album.ensure_slug() end)
+ albums |> length()
+```
+
+```elixir
+albums =
+  Album
+   # |> Ash.Query.limit(2)
+  # |> Ash.Query.filter(arrows_ab.source_b in ^album_event_ids)
+  |> Ash.read!()
+```
+
+```elixir
+for al <- albums do
+  MyApp.LegacyAlbumImport.import_photos_from_legacy_for_album(al)
+  al.title |> MavuUtils.log("", :info)
+  Process.sleep(1000)
+end
+```
+
+```elixir
+# oldpics=MyApp.LegacyAlbumImport.  (al.legacy_album_id)
+# Kino.DataTable.new(oldpics)
+```
+
+```elixir
+# lp=oldpics |> Enum.at(9)
+```
+
+```elixir
+# {:ok, photo}=MyApp.LegacyAlbumImport.import_legacy_photo(lp,al.id)
+```
+
+```elixir
+# {:ok, imagepath} = MyApp.LegacyAlbumImport.get_filename_for_photo(lp)
+```
+
+```elixir
+# {_, {:ok, %{size: _size}}} ={imagepath, File.stat(imagepath)}
+```
+
+```elixir
+# album = MyApp.MavuEntities.load_and_get!(photo, :album)
+```
+
+```elixir
+# @create_mf 
+# {:ok, mf} = MyApp.Eselfiles.get_or_create_mavufile(imagepath, photo)
+```
+
+```elixir
+# import MyApp.MavuEntities.UuidGuards
+
+# mf_id=mf |> to_webid!()
+```
+
+```elixir
+# mf=MavuEntities.resolve!(mf_id)
+```
+
+```elixir
+# @put_mf_in_photo 
+# {:ok, photo} = MyApp.Eselfiles.set_mf_id_in_photo(photo, mf.id)
+```
+
+```elixir
+# mf=MavuFiles.resolve!(mf.id)
+```
+
+```elixir
+# MyApp.EselfileStorage.trigger_flickr_upload(mf.id)
+```
+
+```elixir
+# MyApp.Eselfiles.upload_mavufile_to_flickr(mf)
+```

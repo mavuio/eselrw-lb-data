@@ -1,0 +1,3133 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# old_locationnames
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+require Ecto.Query
+require Ash.Query
+import IEx.Helpers
+import MyApp.MavuEntities.UuidGuards
+```
+
+## Section
+
+```elixir
+# hole alle locations mit alternativen schreibweisen
+
+locs =
+  Location
+  |> Ash.Query.filter(not is_nil(alternative_location_slugs))
+  |> Ash.read!()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+...
+        ...
+      >
+    ],
+    sublocations: [],
+    tags: [],
+    memo: nil,
+    alternative_location_slugs: "alpenmilch-zentrale-weyringergasse-36-1040-wien",
+    created_at: ~U[2024-03-20 17:29:05.010093Z],
+    updated_at: ~U[2024-07-29 09:50:37.577044Z],
+    aggregates: %{},
+    calculations: %{},
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-d4a3-7518-8211-a024ff0fe0b2",
+    title: "Galerie Lindner",
+    names: [
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "Galerie Lindner",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    isrunby_agents: [],
+    street: "Schmalzhofgasse 13/3",
+    zip: "1060",
+    city: "Wien",
+    description: nil,
+    references: [],
+    lifeevents: [],
+    gen_eventcount: 1,
+    artdisciplines_major: [],
+    artdisciplines_minor: [],
+    screenshot: nil,
+    esel_legacy_id: 2016,
+    locationtypes: [
+      #MyApp.EmbeddedLocationLocationtype<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        type: "018c0e08-ad3d-788c-b73f-3cf890c0da5d",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    sublocations: [],
+    tags: ["018ebd7a-2b41-741e-bdfe-99be283391df", "018f5771-e4d6-7502-81ff-7b2f2b125688"],
+    memo: nil,
+    alternative_location_slugs: "galerie-lindner-schmalzhofgasse-13-1060-wien\ngalerie-lindner-schmalzhofgasse-13-3-1060-wien",
+    created_at: ~U[2024-03-20 17:29:06.467708Z],
+    updated_at: ~U[2024-07-10 13:22:59.344747Z],
+    aggregates: %{},
+    calculations: %{},
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-d383-7641-83f7-eab939e1a2d0",
+    title: "Cafe Weidinger",
+    names: [
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "Cafe Weidinger",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    isrunby_agents: nil,
+    street: "Lerchenfelder Gürtel 1",
+    zip: "1160",
+    city: "Wien",
+    description: nil,
+    references: nil,
+    lifeevents: nil,
+    gen_eventcount: 3,
+    artdisciplines_major: [],
+    artdisciplines_minor: [],
+    screenshot: nil,
+    esel_legacy_id: 2196,
+    locationtypes: [
+      #MyApp.EmbeddedLocationLocationtype<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        type: "0190598a-012b-7796-9d3c-2165a1399caa",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    sublocations: nil,
+    tags: nil,
+    memo: nil,
+    alternative_location_slugs: "cafe-weidinger-lerchenfelder-gurtel-1-1160-wien\ncafe-weidinger-lerchenfelder-gurtel-1-1160-wien",
+    created_at: ~U[2024-03-20 17:29:06.179186Z],
+    updated_at: ~U[2024-06-27 13:53:51.303136Z],
+    aggregates: %{},
+    calculations: %{},
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018d3bc0-812d-790e-9034-757352c5e008",
+    title: "Weißer Salon",
+    names: [
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "Weißer Salon",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    isrunby_agents: [],
+    street: "Arthur-Schnitzler-Platz 1",
+    zip: "1070",
+    city: "Wien",
+    description: nil,
+    references: nil,
+    lifeevents: nil,
+    gen_eventcount: 0,
+    artdisciplines_major: [],
+    artdisciplines_minor: [],
+    screenshot: nil,
+    esel_legacy_id: nil,
+    locationtypes: [
+      #MyApp.EmbeddedLocationLocationtype<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        type: "018c3ec4-cd49-76bf-9490-04af90192946",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    sublocations: [],
+    tags: [],
+    memo: nil,
+    alternative_location_slugs: "weisser-salon",
+    created_at: ~U[2024-01-24 13:54:48.237420Z],
+    updated_at: ~U[2024-07-25 12:55:01.753414Z],
+    aggregates: %{},
+    calculations: %{},
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018d3beb-a15d-7dc5-b833-9eed12b20722",
+    title: "VHS Wiener Urania",
+    names: [
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "VHS Wiener Urania",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >,
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "VHS Urania",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    isrunby_agents: [],
+    street: "Uraniastraße 1",
+    zip: "1010",
+    city: "Wien",
+    description: nil,
+    references: [],
+    lifeevents: [],
+    gen_eventcount: 8,
+    artdisciplines_major: ["018c3eb4-d1e7-7f72-baa4-3a0caf4111b8",
+     "018c3eb4-d226-7982-8b78-5e591c3dd5e3"],
+    artdisciplines_minor: [],
+    screenshot: nil,
+    esel_legacy_id: 204,
+    locationtypes: [
+      #MyApp.EmbeddedLocationLocationtype<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        type: "018c3ec4-cd35-742f-8af4-ffe33fca0b69",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    sublocations: [],
+    tags: [],
+    memo: nil,
+    alternative_location_slugs: "dachsaal-volksbildungshaus-wiener-urania-uraniastrasse-1-1010-wien",
+    created_at: ~U[2024-01-24 14:41:54.526082Z],
+    updated_at: ~U[2024-07-25 13:20:50.223322Z],
+    aggregates: %{},
+    calculations: %{},
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018d3bc2-5d02-7b16-9b40-1025e1577a5e",
+    title: "Dunkelkammer",
+    names: [
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "Dunkelkammer",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    isrunby_agents: [],
+    street: "Arthur-Schnitzler-Platz 1",
+    zip: "1070",
+    city: "Wien",
+    description: nil,
+    references: nil,
+    lifeevents: nil,
+    gen_eventcount: 0,
+    artdisciplines_major: [],
+    artdisciplines_minor: [],
+    screenshot: nil,
+    esel_legacy_id: nil,
+    locationtypes: [
+      #MyApp.EmbeddedLocationLocationtype<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        type: "018c3ec4-cd49-76bf-9490-04af90192946",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    sublocations: [],
+    tags: [],
+    memo: nil,
+    alternative_location_slugs: "dunkelkammer",
+    created_at: ~U[2024-01-24 13:56:50.050400Z],
+    updated_at: ~U[2024-07-08 13:02:51.925097Z],
+    aggregates: %{},
+    calculations: %{},
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-cf44-767d-bc58-7002ce25cf0d",
+    title: "Schloss Neugebäude",
+    names: [
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "Schloss Neugebäude",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    isrunby_agents: nil,
+    street: "Otmar-Brix-Gasse 1",
+    zip: "1110",
+    city: "Wien",
+    description: nil,
+    references: nil,
+    lifeevents: nil,
+    gen_eventcount: 1,
+    artdisciplines_major: [],
+    artdisciplines_minor: [],
+    screenshot: nil,
+    esel_legacy_id: 2812,
+    locationtypes: nil,
+    sublocations: nil,
+    tags: nil,
+    memo: nil,
+    alternative_location_slugs: "schloss-neugebaude-kaiser-ebersdorfer-strasse-1110-wien\nschloss-neugebaude-lowenhof\nschloss-neugebaude-otmar-brix-gasse-1110-wien\nschloss-neugebaude-otmar-brix-gasse-1-1110-wien",
+    created_at: ~U[2024-03-20 17:29:05.092593Z],
+    updated_at: ~U[2024-07-23 13:58:09.722502Z],
+    aggregates: %{},
+    calculations: %{},
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-d97b-7693-8328-44378d73a462",
+    title: "Gösserhallen",
+    names: [
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "Gösserhallen",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    isrunby_agents: [],
+    street: "Laxenburger Straße 2b",
+    zip: "1100",
+    city: "Wien",
+    description: nil,
+    references: [],
+    lifeevents: [],
+    gen_eventcount: 5,
+    artdisciplines_major: [],
+    artdisciplines_minor: [],
+    screenshot: nil,
+    esel_legacy_id: 1340,
+    locationtypes: [
+      #MyApp.EmbeddedLocationLocationtype<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        type: "018c3ec4-cd6d-7d15-a7b8-f3f17ada49a2",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    sublocations: [],
+    tags: [],
+    memo: nil,
+    alternative_location_slugs: "gosserhallen-halle-1-laxenburger-strasse-2a-1100-wien\ngosserhallen-halle-5-laxenburger-strasse-2b-1100-wien\ngosserhallen-laxenburger-strasse-2a-1100-wien\ngosserhallen-laxenburger-strasse-2b-1100-wien",
+    created_at: ~U[2024-03-20 17:29:07.707599Z],
+    updated_at: ~U[2024-07-30 13:05:57.679153Z],
+    aggregates: %{},
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-cf00-7e06-ad3e-9818cbf204c9",
+    title: "Lutherische Stadtkirche",
+    names: [
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "Lutherische Stadtkirche",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    isrunby_agents: nil,
+    street: "Dorotheergasse 18",
+    zip: "1010",
+    city: "Wien",
+    description: nil,
+    references: nil,
+    lifeevents: nil,
+    gen_eventcount: 0,
+    artdisciplines_major: [],
+    artdisciplines_minor: [],
+    screenshot: nil,
+    esel_legacy_id: 2853,
+    locationtypes: [
+      #MyApp.EmbeddedLocationLocationtype<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        type: "018c444d-0a3a-7c2b-8817-4ab5ab16c325",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    sublocations: nil,
+    tags: nil,
+    memo: nil,
+    alternative_location_slugs: "lutherische-stadtkirche-dorotheergasse-18-1010-wien\nlutherische-stadtkirche-wien",
+    created_at: ~U[2024-03-20 17:29:05.024510Z],
+    updated_at: ~U[2024-07-29 13:03:20.374623Z],
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-cf20-7c9b-bf00-a3bdb43613ac",
+    title: "Kings Barbing Salon",
+    names: [
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "Kings Barbing Salon",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    isrunby_agents: [],
+    street: "Wimbergergasse 8",
+    zip: "1070",
+    city: "Wien",
+    description: nil,
+    references: [],
+    lifeevents: [],
+    gen_eventcount: 1,
+    artdisciplines_major: [],
+    artdisciplines_minor: [],
+    screenshot: nil,
+    esel_legacy_id: 2836,
+    locationtypes: [
+      #MyApp.EmbeddedLocationLocationtype<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        type: "018c3ec4-cd6d-7d15-a7b8-f3f17ada49a2",
+        datemark: nil,
+        aggregates: %{},
+        ...
+      >
+    ],
+    sublocations: [],
+    tags: [],
+    memo: nil,
+    alternative_location_slugs: "kings-barbing-salon-wimbergergasse-8-1070-wien",
+    created_at: ~U[2024-03-20 17:29:05.056165Z],
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-cf54-7884-bf2a-6351ea2db388",
+    title: "Stadtsaal",
+    names: [
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "Stadtsaal",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    isrunby_agents: [],
+    street: "Mariahilfer Strasse 81",
+    zip: "1060",
+    city: "Wien",
+    description: nil,
+    references: [],
+    lifeevents: [],
+    gen_eventcount: 1,
+    artdisciplines_major: [],
+    artdisciplines_minor: [],
+    screenshot: nil,
+    esel_legacy_id: 2804,
+    locationtypes: [
+      #MyApp.EmbeddedLocationLocationtype<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        type: "018c3ec4-cd49-76bf-9490-04af90192946",
+        datemark: nil,
+        ...
+      >
+    ],
+    sublocations: [],
+    tags: [],
+    memo: nil,
+    alternative_location_slugs: "stadtsaal-mariahilferstrasse-81-1060-wien\nstadtsaal-mariahilfer-strasse-81-1060-wien\nstadtsaal-wien-1060-mariahilferstrasse-81\nstadtsaal-wien-mariahilferstrasse-81-1060-wien",
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-cf29-7f14-9bb7-47936ab42edb",
+    title: "Nepomukkapelle",
+    names: [
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "Nepomukkapelle",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    isrunby_agents: [],
+    street: "Am Tabor",
+    zip: "1020",
+    city: "Wien",
+    description: nil,
+    references: [],
+    lifeevents: [],
+    gen_eventcount: 1,
+    artdisciplines_major: [],
+    artdisciplines_minor: [],
+    screenshot: nil,
+    esel_legacy_id: 2831,
+    locationtypes: [
+      #MyApp.EmbeddedLocationLocationtype<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        type: "018c3ec4-cd6d-7d15-a7b8-f3f17ada49a2",
+        ...
+      >
+    ],
+    sublocations: [],
+    tags: [],
+    memo: nil,
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-cf31-7ebf-92b9-d2b166b6a34a",
+    title: "Karmelitergasse 1",
+    names: [
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "Karmelitergasse 1",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    isrunby_agents: nil,
+    street: "Karmelitergasse 1",
+    zip: "1020",
+    city: "Wien",
+    description: nil,
+    references: nil,
+    lifeevents: nil,
+    gen_eventcount: 0,
+    artdisciplines_major: [],
+    artdisciplines_minor: [],
+    screenshot: nil,
+    esel_legacy_id: 2824,
+    locationtypes: [
+      #MyApp.EmbeddedLocationLocationtype<__meta__: #Ecto.Schema.Metadata<:built, "">, ...>
+    ],
+    sublocations: nil,
+    tags: nil,
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-d077-753a-b0ea-68b2153973bd",
+    title: "WAK - Wiener Amateurphotographen Klub",
+    names: [
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "WAK - Wiener Amateurphotographen Klub",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    isrunby_agents: nil,
+    street: "Köllnerhofgasse 6/13",
+    zip: "1010",
+    city: "Wien",
+    description: nil,
+    references: nil,
+    lifeevents: nil,
+    gen_eventcount: 1,
+    artdisciplines_major: [],
+    artdisciplines_minor: [],
+    screenshot: nil,
+    esel_legacy_id: 2618,
+    locationtypes: nil,
+    sublocations: nil,
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-d2af-7462-a4c7-b61c1420a462",
+    title: "Galizische Botschaft",
+    names: [
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "Galizische Botschaft",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    isrunby_agents: [],
+    street: "Eitelbergergasse 4",
+    zip: "1130",
+    city: "Wien",
+    description: nil,
+    references: [],
+    lifeevents: [],
+    gen_eventcount: 1,
+    artdisciplines_major: [],
+    artdisciplines_minor: [],
+    screenshot: nil,
+    esel_legacy_id: 2315,
+    locationtypes: [...],
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-d27b-7a43-8043-9b961d4df387",
+    title: "Alte Donau - Romaplatz",
+    names: [
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "Alte Donau - Romaplatz",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    isrunby_agents: [],
+    street: "Romaplatz",
+    zip: "1210",
+    city: "Wien",
+    description: nil,
+    references: [],
+    lifeevents: [],
+    gen_eventcount: 1,
+    artdisciplines_major: [],
+    artdisciplines_minor: [],
+    screenshot: nil,
+    esel_legacy_id: 2346,
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-d1bf-7baf-a3a4-a1b2aca8bf81",
+    title: "Althanstraße 12",
+    names: [
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "Althanstraße 12",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    isrunby_agents: [],
+    street: "Althanstraße 12",
+    zip: "1090",
+    city: "Wien",
+    description: nil,
+    references: [],
+    lifeevents: [],
+    gen_eventcount: 1,
+    artdisciplines_major: [],
+    artdisciplines_minor: [],
+    screenshot: nil,
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-d151-7359-9dd7-685961ba27f3",
+    title: "Schrödingerplatz",
+    names: [
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "Schrödingerplatz",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    isrunby_agents: nil,
+    street: "Schrödingerplatz",
+    zip: "1220",
+    city: "Wien",
+    description: nil,
+    references: nil,
+    lifeevents: nil,
+    gen_eventcount: 8,
+    artdisciplines_major: [],
+    artdisciplines_minor: [],
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-d03b-781f-9c0a-63b08b340513",
+    title: "WienZimmer",
+    names: [
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "WienZimmer",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    isrunby_agents: [],
+    street: "Jedleseer Straße 66-94",
+    zip: "1210",
+    city: "Wien",
+    description: nil,
+    references: [],
+    lifeevents: [],
+    gen_eventcount: 2,
+    artdisciplines_major: [],
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "0190da92-cac8-7877-beae-3508ed2c583c",
+    title: "Planet10",
+    names: [
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "Planet10",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    isrunby_agents: [],
+    street: "Pernerstorfergasse 12",
+    zip: "1100",
+    city: "Wien",
+    description: nil,
+    references: [],
+    lifeevents: [],
+    gen_eventcount: nil,
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-cfa1-7723-8784-68c92395321c",
+    title: "Palais Ehrbar",
+    names: [
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "Palais Ehrbar",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    isrunby_agents: [],
+    street: "Mühlgasse 28",
+    zip: "1040",
+    city: "Wien",
+    description: nil,
+    references: [],
+    lifeevents: [],
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-d9a5-7f8e-adde-62607b5098ed",
+    title: "Wotrubakirche",
+    names: [
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "Wotrubakirche",
+        datemark: nil,
+        aggregates: %{},
+        calculations: %{},
+        ...
+      >
+    ],
+    isrunby_agents: nil,
+    street: "Ottillingerplatz 1",
+    zip: "1230",
+    city: "Wien",
+    description: nil,
+    references: nil,
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-d22f-7e49-9a65-f463aeb956f3",
+    title: "Bäckerstrasse 3",
+    names: [
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "Bäckerstrasse 3",
+        datemark: nil,
+        aggregates: %{},
+        ...
+      >
+    ],
+    isrunby_agents: [],
+    street: "Bäckerstrasse 3",
+    zip: "1010",
+    city: "Wien",
+    description: nil,
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-d9f8-7551-aa03-54793103737c",
+    title: "Photoatelier Setzer-Tschiedel",
+    names: [
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "Photoatelier Setzer-Tschiedel",
+        datemark: nil,
+        ...
+      >
+    ],
+    isrunby_agents: nil,
+    street: "Museumstraße 5",
+    zip: "1070",
+    city: "Wien",
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-d119-7952-adf0-40a4ce4ee14a",
+    title: "Bodenstedtgasse 4",
+    names: [
+      #MyApp.EmbeddedLocationName<
+        __meta__: #Ecto.Schema.Metadata<:built, "">,
+        text: "Bodenstedtgasse 4",
+        ...
+      >
+    ],
+    isrunby_agents: nil,
+    street: "Bodenstedtgasse 4",
+    zip: "1210",
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-d31c-78f4-bb9a-94e623a5eb36",
+    title: "Curhaus",
+    names: [#MyApp.EmbeddedLocationName<__meta__: #Ecto.Schema.Metadata<:built, "">, ...>],
+    isrunby_agents: [],
+    street: "Stephansplatz 3a",
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-d0f2-7be5-b549-5efa259cd6c7",
+    title: "Innsbruck",
+    names: [#MyApp.EmbeddedLocationName<...>],
+    isrunby_agents: [],
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-d222-7aaf-9095-c62c34f335ee",
+    title: "Wien Mariahilf",
+    names: [...],
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-cfa5-7bf4-aa54-b5a368a1667c",
+    title: "VHS Simmering",
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    id: "018e5ce8-d10a-7eed-b71b-7141fc194f6a",
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    __meta__: #Ecto.Schema.Metadata<:loaded, "locations">,
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    arrows_ab: #Ash.NotLoaded<:relationship, field: :arrows_ab>,
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    arrows_ba: #Ash.NotLoaded<:relationship, field: :arrows_ba>,
+    ...
+  >,
+  #MyApp.Location<
+    current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>,
+    showtimes: #Ash.NotLoaded<:relationship, field: :showtimes>,
+    ...
+  >,
+  #MyApp.Location<current_showtimes: #Ash.NotLoaded<:relationship, field: :current_showtimes>, ...>,
+  #MyApp.Location<...>,
+  ...
+]
+```
+
+```elixir
+
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+nil
+```
+
+```elixir
+locs_with_slugs =
+  for loc <- locs do
+    slugs =
+      loc.alternative_location_slugs
+      |> String.split("\n", trim: true)
+      |> Enum.map(&String.trim/1)
+
+    # otherlocs=
+    #   slugs
+    #    |> Enum.map(&Location.get_by_slug!/1)
+    %{loc: loc.title, id: loc.id, slugs: slugs}
+  end
+locs_with_slugs  |> Kino.DataTable.new()
+```
+
+<!-- livebook:{"output":true} -->
+
+```text
+[%{id: "018e5ce8-d780-7ced-928a-0d27130a68f0", loc: "Medizinische Universität Wien", slugs: ["van-swieten-saal-der-meduni-wien-van-swieten-gasse-1a-1090-wien"]}, %{id: "018e5ce8-db68-7870-aed4-b3510cea6f78", loc: "Salmgasse 6", slugs: ["raum-fur-kultur-auf-zeit-salmgasse-6-1030-wien", "salmgasse-6-1030-wien"]}, %{id: "018e5ce8-cef7-7b8d-89ae-ddc85e54028b", loc: "Die Graphische", slugs: ["hohere-graphische-bundes-lehr-und-versuchsanstalt-foyer-leyserstrasse-6-1140-wien"]}, %{id: "018c3f9b-421e-7247-8554-bcc500ec9ff5", loc: "Karl-Schweighofer-Gasse", slugs: ["akademie-der-bildenden-kunste-institutsgebaude-raum-312-karl-schweighofer-gasse-3-1070-wien", "karl-schweighofer-gasse-3-1070-vienna-room-4-11", "karl-schweighofer-gasse-3-third-floor-1070-wien"]}, %{id: "018e5ce8-dc66-732f-b19a-e87215ae2f16", loc: "museumkrems", slugs: ["museumkrems-kornermarkt-14-3500-krems-an-der-donau"]}, %{id: "018e5ce8-d2c4-790c-924c-f4c97de9aea9", loc: "BIG Konzernzentrale", slugs: ["big-bundesimmobliengesellschaft-hintere-zollamtsstrasse-1-2-stock-1030-wien", "big-zentrale-hintere-zollamtsstrasse-1-1030-wien"]}, %{id: "018e5ce8-dbd4-78d2-b817-45c2b7ccfab8", loc: "Fabrik Seestadt", slugs: ["fabrik-aspern-seestadt-sonnenallee-22-1120-wien", "fabrik-aspern-seestadt-sonnenallee-22-1220-wien", "fabrik-ehemalige-rollbahn-seestadtstrasse-aspern-seestadt-1220-wien", "aspern-seestadt-ehemalige-rollbahn-vor-der-fabrik-publik-seestadtstrasse-1220-wien", "fabrik-publik-aspern-seestadt-1220-wien", "fabrik-publik-aspern-seestadt-ehem-rollbahn-1220-wien", "fabrik-publik-aspern-seestadt-ehem-rollbahn-seestadtstrasse-1220-wien", "fabrik-publik-aspern-seestadt-ehem-rollbahn-seestadtstrasse-1220-wien", "fabrik-publik-ehemalige-rollbahn-seestadtstrasse-aspern-seestadt-1220-wien", "rollbahn-fabrik-publik-aspern-seestadt"]}, %{id: "018d3bf0-37ca-7b7e-aaf5-296796c4134a", loc: "Theater Akzent", slugs: ["theater-akzent-argentinierstr-37-1040-wien-tagsuber-freie-buhne-wieden-wiedner-hauptstr-60b-1040-wien-ab-19-30-h-und-20-00-h", "theater-akzent-argentinierstrasse-37-1040-wien", "theater-akzent-theresianumgasse-18-1040-wien", "theater-akzent-theresianumgasse-18-1040-wien"]}, %{id: "018e5ce8-e02f-7628-9e28-e884085cd621", loc: "Theater Nestroyhof Hamakom", slugs: ["hamakom-theater-nestroyplatz-1-1020-wien", "praterstra-szlig-e-theater-nestroyhof-hamakom", "theater-nestroyhof-hamakom", "theater-nestroyhof-hamakom-nestroyplatz-1-1020-wien", "theater-nestroyhof-hamakom-nestroyplatz-1-1020-wien", "theater-nestroyhof-hamakom-nestroyplatz-1-1020-wien", "theater-nestroyhof-hamakom-transit-verein-fur-darstellende-und-bildende-kunst-nestroyplatz-1-1020-wien", "theater-im-nestroyhof-1020-nestroyplatz-1"]}, %{id: "018c443e-c47b-7005-a4e3-3c2800a17e3a", loc: "Angewandte Expositur Eyzinggasse (EYZ)", slugs: ["depot-der-angewandten-hs-art-storage-gmbh-eyzinginggasse-2-1110-wien"]}, %{id: "018e5ce8-d030-763b-a5de-701b1d1f468b", loc: "Landart Eisenberg", slugs: ["landart-eisenberg-bahnhofsring-3-8380-jennersdorf"]}, %{id: "018e5ce8-d743-7fec-8e39-2b2d3eaf0c6e", loc: "Paulusgasse 12", slugs: ["paulusgasse-10-12-1030-wien", "paulusgasse-ecke-paulusplatz-1030-wien", "paulusplatz-ecke-paulusgasse"]}, %{id: "018e5ce8-d91f-7611-820e-bc6ee4fa9469", loc: "Calasanzsaal", slugs: ["calasanzsaal-der-pfarre-maria-treu-piaristengasse-45-1080-wien", "calasanzsaal-der-pfarre-maria-treu-piaristengasse-45-1080-wien", "calasanzsaal-der-piaristenkirche-piaristengasse-43-45-1080-wien"]}, %{id: "018d3c03-cc55-76c5-a292-92380b86affe", loc: "secession", slugs: ["clubraumen-der-secession-1010-karlsplatz", "ehemaliges-cafe-der-secession", "ehemaliges-cafe-der-secession-eingang-ruckseite-der-secession", "ehem-cafe-der-secession", "secession", "secession", "secession-1010-friedrichstr-12", "secession-1010-friedrichstrasse", "secession-1010-karlsplatz", "secession-1010-wien-friedrichstrasse-12", "secession-cafe-friedrichstrasse-12-1010-wien", "secession-friedrichstrasse-12-1010-wien", "secession-friedrichstrasse-12-1010-wien", "secession-friedrichstrasse-12-1010-wien", "secession-friedrichstrasse-12-1010-wien", "secession-friedrichstrasse-12-1010-wien", "secession-friedrichstrasse-12-1010-wien-open-air", "secession-friedrichstrasse-12-a-1010-wien", "secession-friedrichstra-szlig-e-12-1010-wien", "secession-froedrichstrasse-12-1010-wien", "secession-hauptraum-friedrichstrasse-12-1010-wien", "secession-hintereingang-cafe-friedrichstrasse-12-1010-wien", "secession-hintereingang-ehem-cafe-friedrichstr-12-1010-wien", "secession-hintereingang-ehem-cafe-friedrichstrasse-12-wien", "secessionsgarten", "secessions-garten-friedrichstrasse-12-wien-1", "secession-shop-friedrichstrasse-12-1010-wien", "secession-vereinigung-bildender-kunstlerinnen-friedrichstrasse-12-a-1010-wien", "secession-vienna-friedrichstrasse-12-1010-vienna", "secession-vorraum-und-ver-sacrum-zimmer", "treffpunkt-secession", "treffpunkt-secession-friedrichstrasse-2-1010-wien", "ver-sacrum-zimmer-der-wiener-secession", ...]}, %{id: "018e5ce8-cef1-7b24-83f3-7264f6b0540f", loc: "Alpenmilchzentrale", slugs: ["alpenmilch-zentrale-weyringergasse-36-1040-wien"]}, %{id: "018e5ce8-d4a3-7518-8211-a024ff0fe0b2", loc: "Galerie Lindner", slugs: ["galerie-lindner-schmalzhofgasse-13-1060-wien", "galerie-lindner-schmalzhofgasse-13-3-1060-wien"]}, %{id: "018e5ce8-d383-7641-83f7-eab939e1a2d0", loc: "Cafe Weidinger", slugs: ["cafe-weidinger-lerchenfelder-gurtel-1-1160-wien", "cafe-weidinger-lerchenfelder-gurtel-1-1160-wien"]}, %{id: "018d3bc0-812d-790e-9034-757352c5e008", loc: "Weißer Salon", slugs: ["weisser-salon"]}, %{id: "018d3beb-a15d-7dc5-b833-9eed12b20722", loc: "VHS Wiener Urania", slugs: ["dachsaal-volksbildungshaus-wiener-urania-uraniastrasse-1-1010-wien"]}, %{id: "018d3bc2-5d02-7b16-9b40-1025e1577a5e", loc: "Dunkelkammer", slugs: ["dunkelkammer"]}, %{id: "018e5ce8-cf44-767d-bc58-7002ce25cf0d", loc: "Schloss Neugebäude", slugs: ["schloss-neugebaude-kaiser-ebersdorfer-strasse-1110-wien", "schloss-neugebaude-lowenhof", "schloss-neugebaude-otmar-brix-gasse-1110-wien", "schloss-neugebaude-otmar-brix-gasse-1-1110-wien"]}, %{id: "018e5ce8-d97b-7693-8328-44378d73a462", loc: "Gösserhallen", slugs: ["gosserhallen-halle-1-laxenburger-strasse-2a-1100-wien", "gosserhallen-halle-5-laxenburger-strasse-2b-1100-wien", "gosserhallen-laxenburger-strasse-2a-1100-wien", "gosserhallen-laxenburger-strasse-2b-1100-wien"]}, %{id: "018e5ce8-cf00-7e06-ad3e-9818cbf204c9", loc: "Lutherische Stadtkirche", slugs: ["lutherische-stadtkirche-dorotheergasse-18-1010-wien", "lutherische-stadtkirche-wien"]}, %{id: "018e5ce8-cf20-7c9b-bf00-a3bdb43613ac", loc: "Kings Barbing Salon", slugs: ["kings-barbing-salon-wimbergergasse-8-1070-wien"]}, %{id: "018e5ce8-cf54-7884-bf2a-6351ea2db388", loc: "Stadtsaal", slugs: ["stadtsaal-mariahilferstrasse-81-1060-wien", "stadtsaal-mariahilfer-strasse-81-1060-wien", "stadtsaal-wien-1060-mariahilferstrasse-81", "stadtsaal-wien-mariahilferstrasse-81-1060-wien"]}, %{id: "018e5ce8-cf29-7f14-9bb7-47936ab42edb", loc: "Nepomukkapelle", slugs: ["johannes-nepomuk-kapelle-wahringer-gurtel-bei-gurtelbogen-115-1090-wien"]}, %{id: "018e5ce8-cf31-7ebf-92b9-d2b166b6a34a", loc: "Karmelitergasse 1", slugs: ["treffpunkt-karmelitergasse-1"]}, %{id: "018e5ce8-d077-753a-b0ea-68b2153973bd", loc: "WAK - Wiener Amateurphotographen Klub", slugs: ["wak-kollnerhofgasse-6-dg-1010-wien", "wak-wiener-amateur-photographenklub-kollnerhofgasse-6-dg-1010-wien"]}, %{id: "018e5ce8-d2af-7462-a4c7-b61c1420a462", loc: "Galizische Botschaft", slugs: ["galizische-botschaft-eitelbergergasse-4-1130-wien"]}, %{id: "018e5ce8-d27b-7a43-8043-9b961d4df387", loc: "Alte Donau - Romaplatz", slugs: ["romawiese-romaplatz-1210-wien"]}, %{id: "018e5ce8-d1bf-7baf-a3a4-a1b2aca8bf81", loc: "Althanstraße 12", slugs: ["soulveranda-althanstrasse-12-1090-wien"]}, %{id: "018e5ce8-d151-7359-9dd7-685961ba27f3", loc: "Schrödingerplatz", slugs: ["schrodingerplatz-1220", "schrodingerplatz-1220-wien", "schrodingerplatz-1220-wien", "schrodingerplatz-1-eingang-amtshaus-1220-wien"]}, %{id: "018e5ce8-d03b-781f-9c0a-63b08b340513", loc: "WienZimmer", slugs: ["wienzimmer"]}, %{id: "0190da92-cac8-7877-beae-3508ed2c583c", loc: "Planet10", slugs: ["pernerstorfergasse-12-1100-wien", "planet10-pernerstorfergasse-12-1100-wien", "planet-10-pernerstorfergasse-12-1100-wien", "planet10-pernerstorfergasse-12-1100-wien", "planet-10-pernerstorfergasse-12-1110-wien", "planet-10"]}, %{id: "018e5ce8-cfa1-7723-8784-68c92395321c", loc: "Palais Ehrbar", slugs: ["grosser-ehrbar-saal-muhlgasse-28-30-1040-wien", "grosser-ehrbarsaal-muhlgasse-30-1040-wien"]}, %{id: "018e5ce8-d9a5-7f8e-adde-62607b5098ed", loc: "Wotrubakirche", slugs: ["wotrubakirche-ottillingerplatz-1-1230-wien", "wotrubakirche-ottillingerplatz-1-1230-wien"]}, %{id: "018e5ce8-d22f-7e49-9a65-f463aeb956f3", loc: "Bäckerstrasse 3", slugs: ["galerie-hohenlohe-1010-backerstrasse-3", "galerie-hohenlohe-backerstrasse-3-1010-wien", "galerie-hohenlohe-backerstrasse-3-1010-wien"]}, %{id: "018e5ce8-d9f8-7551-aa03-54793103737c", loc: "Photoatelier Setzer-Tschiedel", slugs: ["photoatelier-setzer-tschiedel-dachgeschoss-museumstrasse-5-1070-wien", "photoatelier-setzer-tschiedel-museumstrasse-5-1070-wien"]}, %{id: "018e5ce8-d119-7952-adf0-40a4ce4ee14a", loc: "Bodenstedtgasse 4", slugs: ["bodenstedtgasse-6-1210-wien", "bodenstedtgasse-ecke-wedekindgasse-1210-wien"]}, %{id: "018e5ce8-d31c-78f4-bb9a-94e623a5eb36", loc: "Curhaus", slugs: ["curhaus-der-dompfarre-st-stephan-stephansplatz-3-1-stock-1010-wien", "curhaus-st-stephan-stephansplatz-3-1-stock-1010-wien"]}, %{id: "018e5ce8-d0f2-7be5-b549-5efa259cd6c7", loc: "Innsbruck", slugs: ["6020-innsbruck"]}, %{id: "018e5ce8-d222-7aaf-9095-c62c34f335ee", loc: "Wien Mariahilf", slugs: ["1060-mariahilf"]}, %{id: "018e5ce8-cfa5-7bf4-aa54-b5a368a1667c", loc: "VHS Simmering", slugs: ["vhs-simmering-gottschalkgasse-10-1110-wien"]}, %{id: "018e5ce8-d10a-7eed-b71b-7141fc194f6a", loc: "Spinnerin am Kreuz", slugs: ["spinnerin-am-kreuz"]}, %{id: "018e5ce8-d006-7bdc-81c3-98daa8fcf6df", loc: "USZ Schmelz", slugs: ["usz-1-universit-auml-ts-sport-zentrum-auf-der-schmelz-6a-halle-1-1150-wien", "usz-1-universit-auml-ts-sport-zentrum-wien-1150-auf-der-schmelz-6a-halle-1"]}, %{id: "018e5ce8-d071-7ca6-9439-d44dbf54d4ee", loc: "Hyblerpark", slugs: ["hyblerpark-1110-wien", ...]}, %{id: "018e5ce8-d295-74c6-9aa1-d39e842eda4f", loc: "Hietzing", slugs: [...]}, %{id: "018e5ce8-d040-7465-91a4-21a363fefdcb", loc: "Mitterhofergasse 2", ...}, %{id: "018e5ce8-d242-7381-9897-55e7eb4ca70e", ...}, %{...}, ...]
+```
+
+```elixir
+# find all  MyApp.LegacyEvent which alternative names map to  one of those slugs
+# and move their showtimes to appropriate location
+
+evs_with_slugs=MyAppBe.LocationsLive.LocationAltnamesLc.get_alternative_location_slugs_with_event_ids()
+# for loc <- locs_with_slugs do
+
+evs_with_slugs|> Kino.DataTable.new()
+
+```
+
+<!-- livebook:{"output":true} -->
+
+```text
+[%{id: 11971, location: "expositur wiener kunst schule\r\nAnton-Scharff-Gasse 4\r\n1120 Wien", slug: "expositur-wiener-kunst-schule-anton-scharff-gasse-4-1120-wien"}, %{id: 11978, location: "Kunstraum Weikendorf", slug: "kunstraum-weikendorf"}, %{id: 11986, location: "Künstlerhaus k/haus Videogalerie", slug: "kunstlerhaus-k-haus-videogalerie"}, %{id: 13463, location: "Galerie Krinzinger\r\n1010, Seilerstätte 16", slug: "galerie-krinzinger-1010-seilerstatte-16"}, %{id: 26184, location: "Seilerstätte\r\n1010 Wien", slug: "seilerstatte-1010-wien"}, %{id: 8934, location: "brut im Künstlerhaus", slug: "brut-im-kunstlerhaus"}, %{id: 5317, location: "thepalace\r\nbetriebsbahnhof breitensee\r\nhütteldorferstr.112\r\n1140 wien\r\n(u3 hütteldorferstr.)", slug: "thepalace-betriebsbahnhof-breitensee-hutteldorferstr-112-1140-wien-u3-hutteldorferstr"}, %{id: 986, location: "Fotogalerie Wien, Währinger Straße 59/WUK, A - 109", slug: "fotogalerie-wien-wahringer-strasse-59-wuk-a-109"}, %{id: 26195, location: "Kunstraum am Schauplatz \r\nPraterstrasse 42\r\n1020 Wien", slug: "kunstraum-am-schauplatz-praterstrasse-42-1020-wien"}, %{id: 19365, location: "1160 Wien, Yppenplatz, Radowanhalle", slug: "1160-wien-yppenplatz-radowanhalle"}, %{id: 1689, location: "rhiz", slug: "rhiz"}, %{id: 1263, location: "fluc", slug: "fluc"}, %{id: 5319, location: "thepalace\r\nbetriebsbahnhof breitensee\r\nhütteldorferstr.112\r\n1140 wien\r\n(u3 hütteldorferstr.)", slug: "thepalace-betriebsbahnhof-breitensee-hutteldorferstr-112-1140-wien-u3-hutteldorferstr"}, %{id: 1856, location: "Metalab", slug: "metalab"}, %{id: 1864, location: "Metalab/Fluc", slug: "metalab-fluc"}, %{id: 1869, location: "Fluc Beisl", slug: "fluc-beisl"}, %{id: 1559, location: "Schikaneder Kino, Margaretenstr. 24, 1040 Wien", slug: "schikaneder-kino-margaretenstr-24-1040-wien"}, %{id: 1564, location: "Galerie IG BILDENDE KUNST, 1060, Gumpendorfer Stra", slug: "galerie-ig-bildende-kunst-1060-gumpendorfer-stra"}, %{id: 1578, location: "Lerchenfeldergürtel 43 / Ecke Grundsteingasse, 116", slug: "lerchenfeldergurtel-43-ecke-grundsteingasse-116"}, %{id: 1605, location: "M13, Akademie der bildenden Künste, Mezzanin recht", slug: "m13-akademie-der-bildenden-kunste-mezzanin-recht"}, %{id: 1866, location: "Novit??tenraum", slug: "novit-tenraum"}, %{id: 24106, location: "Lukas Feichtner Galerie\r\nSeilerstätte 19\r\n1010 Wien", slug: "lukas-feichtner-galerie-seilerstatte-19-1010-wien"}, %{id: 1566, location: "Osteria Allora, Wallensteinplatz 5-6 1200 wien", slug: "osteria-allora-wallensteinplatz-5-6-1200-wien"}, %{id: 1575, location: "Krinzinger Projekte, 1070, Schottenfeldgasse 45", slug: "krinzinger-projekte-1070-schottenfeldgasse-45"}, %{id: 1871, location: "Novit??tenraum", slug: "novit-tenraum"}, %{id: 31845, location: "Universität für angewandte Kunst Wien\r\nOskar Kokoschka-Platz 2, 1010 Wien\r\n\r\nNeubau 6.Stock", slug: "universitat-fur-angewandte-kunst-wien-oskar-kokoschka-platz-2-1010-wien-neubau-6-stock"}, %{id: 1562, location: "Depot, 1070, Breite Gasse", slug: "depot-1070-breite-gasse"}, %{id: 1576, location: "EKH, Wielandgasse 2-4, Favoriten", slug: "ekh-wielandgasse-2-4-favoriten"}, %{id: 1610, location: "Michael Hall Con(temporary), 1050, Diehlgasse 51", slug: "michael-hall-con-temporary-1050-diehlgasse-51"}, %{id: 1563, location: "Phonogrammarchiv", slug: "phonogrammarchiv"}, %{id: 1568, location: "Künstlerhaus Wien, 1010, Karlsplatz 5", slug: "kunstlerhaus-wien-1010-karlsplatz-5"}, %{id: 1577, location: "IFK Internationales Forschungszentrum Kulturwissen", slug: "ifk-internationales-forschungszentrum-kulturwissen"}, %{id: 1600, location: "Gartenbaukino", slug: "gartenbaukino"}, %{id: 1874, location: "Bibliothek", slug: "bibliothek"}, %{id: 1560, location: "Schikaneder Kino, Margaretenstr. 24, 1040 Wien", slug: "schikaneder-kino-margaretenstr-24-1040-wien"}, %{id: 1565, location: "Galerie IG BILDENDE KUNST, 1060, Gumpendorfer Stra", slug: "galerie-ig-bildende-kunst-1060-gumpendorfer-stra"}, %{id: 1588, location: "Altes Rathaus, Wipplingerstraße 8, 1011 Wien", slug: "altes-rathaus-wipplingerstrasse-8-1011-wien"}, %{id: 1602, location: "TAG - Theater an der Gumpendorfer Straße, 1060 Wie", slug: "tag-theater-an-der-gumpendorfer-strasse-1060-wie"}, %{id: 1607, location: "Wiener Rathaus, Wappensaal, Lichtenfelsgasse 2, Fe", slug: "wiener-rathaus-wappensaal-lichtenfelsgasse-2-fe"}, %{id: 1617, location: "IKL - Institut für das künstlerische Lehramt, 1070", slug: "ikl-institut-fur-das-kunstlerische-lehramt-1070"}, %{id: 1596, location: "Impulszentrum IP.TWO - Fassade. Lerchenfeldergürte", slug: "impulszentrum-ip-two-fassade-lerchenfeldergurte"}, %{id: 1603, location: "TAG - Theater an der Gumpendorfer Straße, 1060 Wie", slug: "tag-theater-an-der-gumpendorfer-strasse-1060-wie"}, %{id: 1608, location: "Depot, 1070, Breite Gasse", slug: "depot-1070-breite-gasse"}, %{id: 1613, location: "QDK Vernstaltungsraum, quartier21/MQ, Electric Ave", slug: "qdk-vernstaltungsraum-quartier21-mq-electric-ave"}, %{id: 1618, location: "IKL - Institut für das künstlerische Lehramt, 1070", slug: "ikl-institut-fur-das-kunstlerische-lehramt-1070"}, %{id: 1635, location: "layr:wuestenhagen CONTEMPORARY, An der Hülben 2, A", slug: "layr-wuestenhagen-contemporary-an-der-hulben-2-a"}, %{id: 1650, location: "Depot, 1070, Breite Gasse", slug: "depot-1070-breite-gasse"}, %{id: 1661, location: "Christine König Galerie, 1040, Schleifmühlgasse 1", ...}, %{id: 1672, ...}, %{...}, ...]
+```
+
+```elixir
+# for loc <- locs_with_slugs |> Enum.take(10000) do
+#   for loc_slug <- loc.slugs |> Enum.uniq() do
+#     evs_with_slugs
+#     |> Enum.filter(fn ev -> loc_slug == ev.slug end)
+#     |> case do
+#       [] ->
+#         "✖ no events found for slug #{loc_slug}"
+
+#       evs when is_list(evs) ->
+#         for ev <- evs do
+#           Event.get_by_legacy_event_id(ev.id, load: [:showtimes])
+#           |> case do
+#             {:ok, ev} ->
+#               for st <- ev.showtimes do
+#                 "showtime #{{"ev",st.event_id} |> to_webid!()} found, set loc_id to #{loc.id}/#{loc.loc}"
+
+#                 st
+#                 |> Ash.Changeset.for_update(:update, %{location_id: loc.id})
+#                 |> Ash.update!()
+
+#               end
+
+#             {:error, _} ->
+#               "✖ no event found for legacy id #{ev.id}"
+#           end
+#         end
+#     end
+#   end
+# end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+...
+          location_id: "018e5ce8-d97b-7693-8328-44378d73a462",
+          location_text: "Gösserhallen, Laxenburger Straße 2B, 1100 Wien",
+          day1: ~D[2018-06-14],
+          day2: ~D[2018-06-15],
+          time1: 20.5,
+          time2: nil,
+          time_text: nil,
+          tipp_text: nil,
+          legacy_id: 97239,
+          tipp_tags: nil,
+          tags: nil,
+          hidden: nil,
+          ...
+        >
+      ],
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "01906950-0fb2-7c35-80a3-9432c634decc",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "018e5ce8-d97b-7693-8328-44378d73a462",
+          location_text: "Gösserhallen, Laxenburger Straße 2B, 1100 Wien",
+          day1: ~D[2018-06-13],
+          day2: ~D[2018-06-16],
+          time1: 19.5,
+          time2: nil,
+          time_text: nil,
+          tipp_text: nil,
+          legacy_id: 97234,
+          tipp_tags: nil,
+          tags: nil,
+          ...
+        >
+      ]
+    ]
+  ],
+  [
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "01906949-404f-76ad-b69d-97a25d9d6e82",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "018e5ce8-cf00-7e06-ad3e-9818cbf204c9",
+          location_text: "Lutherische Stadtkirche \r\nDorotheergasse 18\r\n1010 Wien",
+          day1: ~D[2009-09-04],
+          day2: ~D[2018-03-27],
+          time1: 19.0,
+          time2: nil,
+          time_text: nil,
+          tipp_text: nil,
+          legacy_id: 35371,
+          tipp_tags: nil,
+          tags: nil,
+          hidden: nil,
+          created_at: ~U[2024-06-30 13:15:26.671714Z],
+          updated_at: ~U[2024-08-02 15:21:36.097684Z],
+          ...
+        >
+      ]
+    ],
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "01906947-e51c-7454-83f9-fb4a5758cedb",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "018e5ce8-cf00-7e06-ad3e-9818cbf204c9",
+          location_text: "Lutherische Stadtkirche Wien",
+          day1: ~D[2007-11-03],
+          day2: ~D[2018-03-27],
+          time1: 17.0,
+          time2: nil,
+          time_text: nil,
+          tipp_text: nil,
+          legacy_id: 5671,
+          tipp_tags: nil,
+          tags: nil,
+          hidden: nil,
+          created_at: ~U[2024-06-30 13:13:57.789200Z],
+          ...
+        >
+      ]
+    ]
+  ],
+  [
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694e-ff0a-7c0d-932a-c2cc1e419d14",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "018e5ce8-cf20-7c9b-bf00-a3bdb43613ac",
+          location_text: "Kings Barbing Salon, Wimbergergasse 8, 1070 Wien",
+          day1: ~D[2016-06-13],
+          day2: ~D[2016-06-25],
+          time1: 19.0,
+          time2: nil,
+          time_text: nil,
+          tipp_text: nil,
+          legacy_id: 85067,
+          tipp_tags: nil,
+          tags: nil,
+          hidden: nil,
+          created_at: ~U[2024-06-30 13:21:43.178748Z],
+          ...
+        >
+      ]
+    ]
+  ],
+  [
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694c-36c1-70f4-9f75-7d3185bd160a",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "018e5ce8-cf54-7884-bf2a-6351ea2db388",
+          location_text: "Stadtsaal, Mariahilferstraße 81, 1060 Wien",
+          day1: ~D[2012-08-03],
+          day2: ~D[2012-08-03],
+          time1: 20.0,
+          time2: nil,
+          time_text: nil,
+          tipp_text: nil,
+          legacy_id: 59270,
+          tipp_tags: nil,
+          tags: nil,
+          hidden: nil,
+          ...
+        >
+      ]
+    ],
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694c-bc59-764e-8047-d1a52071d2f8",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "018e5ce8-cf54-7884-bf2a-6351ea2db388",
+          location_text: "Stadtsaal, Mariahilfer Straße 81, 1060 Wien",
+          day1: ~D[2013-04-08],
+          day2: ~D[2013-04-08],
+          time1: 20.0,
+          time2: nil,
+          time_text: nil,
+          tipp_text: nil,
+          legacy_id: 64243,
+          tipp_tags: nil,
+          tags: nil,
+          ...
+        >
+      ]
+    ],
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694c-6d6d-7453-bc46-93bed1f2d427",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "018e5ce8-cf54-7884-bf2a-6351ea2db388",
+          location_text: "STADTSAAL Wien, 1060 Mariahilferstrasse 81",
+          day1: ~D[2012-10-23],
+          day2: ~D[2012-10-23],
+          time1: 20.0,
+          time2: nil,
+          time_text: nil,
+          tipp_text: nil,
+          legacy_id: 61332,
+          tipp_tags: nil,
+          ...
+        >
+      ]
+    ],
+    [[]]
+  ],
+  [
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694f-b698-73a5-99db-70269c80eaea",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "018e5ce8-cf29-7f14-9bb7-47936ab42edb",
+          location_text: "Johannes Nepomuk Kapelle, Währinger Gürtel bei Gürtelbogen 115, 1090 Wien",
+          day1: ~D[2017-10-16],
+          day2: ~D[2017-10-16],
+          time1: 19.0,
+          time2: nil,
+          time_text: nil,
+          tipp_text: nil,
+          legacy_id: 92877,
+          tipp_tags: nil,
+          tags: nil,
+          ...
+        >
+      ]
+    ]
+  ],
+  [
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "01906947-956c-7d50-a255-797691cf90b8",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "018e5ce8-cf31-7ebf-92b9-d2b166b6a34a",
+          location_text: "Treffpunkt: Karmelitergasse 1",
+          day1: ~D[2024-04-12],
+          day2: ~D[2024-04-12],
+          time1: 13.5,
+          time2: nil,
+          time_text: nil,
+          tipp_text: nil,
+          legacy_id: 122649,
+          tipp_tags: nil,
+          ...
+        >
+      ]
+    ]
+  ],
+  [
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694e-d372-7ea0-a68b-d260569aaeda",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "018e5ce8-d077-753a-b0ea-68b2153973bd",
+          location_text: "WAK, Köllnerhofgasse 6/DG, 1010 Wien",
+          day1: ~D[2016-03-10],
+          day2: ~D[2016-04-01],
+          time1: 19.0,
+          time2: nil,
+          time_text: nil,
+          tipp_text: nil,
+          legacy_id: 82937,
+          ...
+        >
+      ]
+    ],
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694e-75f9-7f2a-8382-684e9930830f",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "018e5ce8-d077-753a-b0ea-68b2153973bd",
+          location_text: "WAK - Wiener-Amateur-Photographenklub, Köllnerhofgasse 6/DG, 1010 Wien",
+          day1: ~D[2015-09-17],
+          day2: ~D[2015-09-17],
+          time1: 19.0,
+          time2: nil,
+          time_text: nil,
+          tipp_text: nil,
+          ...
+        >
+      ]
+    ]
+  ],
+  [
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694d-21e6-7515-ba13-83a93baaa2fe",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "018e5ce8-d2af-7462-a4c7-b61c1420a462",
+          location_text: "Galizische Botschaft\r\nEitelbergergasse 4\r\n1130 Wien",
+          day1: ~D[2014-01-23],
+          day2: ~D[2014-01-23],
+          time1: 19.5,
+          time2: nil,
+          time_text: nil,
+          tipp_text: nil,
+          ...
+        >
+      ]
+    ]
+  ],
+  [
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "01906950-0eb4-7fb5-8342-ba708358333b",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "018e5ce8-d27b-7a43-8043-9b961d4df387",
+          location_text: "Romawiese, Romaplatz 1210 Wien",
+          day1: ~D[2018-06-14],
+          day2: ~D[2018-06-17],
+          time1: 14.0,
+          time2: nil,
+          time_text: nil,
+          ...
+        >
+      ]
+    ]
+  ],
+  [
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694a-bd57-73eb-99cf-d9480309eb95",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "018e5ce8-d1bf-7baf-a3a4-a1b2aca8bf81",
+          location_text: "Soulveranda\r\nAlthanstrasse 12, 1090 Wien",
+          day1: ~D[2010-11-06],
+          day2: ~D[2010-11-06],
+          time1: 20.0,
+          time2: nil,
+          ...
+        >
+      ]
+    ]
+  ],
+  [
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694b-80a6-7b42-8f5c-bd9ff316182d",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "018e5ce8-d151-7359-9dd7-685961ba27f3",
+          location_text: "Schrödingerplatz, 1220",
+          day1: ~D[2011-09-02],
+          day2: ~D[2011-09-25],
+          time1: 18.0,
+          ...
+        >
+      ]
+    ],
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694a-3373-7549-b9d3-b770165a29b9",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "018e5ce8-d151-7359-9dd7-685961ba27f3",
+          location_text: "Schrödingerplatz 1220 Wien",
+          day1: ~D[2010-06-22],
+          day2: ~D[2018-03-27],
+          ...
+        >
+      ],
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694d-92e3-7405-9481-1b3da0ec9529",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "018e5ce8-d151-7359-9dd7-685961ba27f3",
+          location_text: "Schrödingerplatz, 1220 Wien",
+          day1: ~D[2014-06-28],
+          ...
+        >
+      ]
+    ],
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694a-21a2-741a-bb9b-79fd6d7f5f54",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "018e5ce8-d151-7359-9dd7-685961ba27f3",
+          location_text: "Schrödingerplatz 1\r\nEingang Amtshaus\r\n1220 Wien",
+          day1: ~D[2010-06-22],
+          ...
+        >
+      ]
+    ]
+  ],
+  [
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "01906945-7473-7f03-89ce-4ba2859b8894",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "018e5ce8-d03b-781f-9c0a-63b08b340513",
+          location_text: "WienZimmer",
+          day1: ~D[2023-04-29],
+          day2: ~D[2023-04-29],
+          ...
+        >
+      ]
+    ]
+  ],
+  [
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694d-83c4-7f89-9308-b602172e7871",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "0190da92-cac8-7877-beae-3508ed2c583c",
+          location_text: "Pernerstorfergasse 12, 1100 Wien",
+          day1: ~D[2014-06-24],
+          ...
+        >
+      ]
+    ],
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694a-0a77-7855-956c-5db887af7554",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "0190da92-cac8-7877-beae-3508ed2c583c",
+          location_text: "planet10\r\nPernerstorfergasse 12\r\n1100 wien",
+          ...
+        >
+      ],
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694b-d80f-7cee-ad4f-c41f57f1114d",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "0190da92-cac8-7877-beae-3508ed2c583c",
+          ...
+        >
+      ]
+    ],
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694c-4f81-7fb1-be9a-dd7e8454befa",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "0190da92-cac8-7877-beae-3508ed2c583c",
+          ...
+        >
+      ],
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694c-9502-736b-ab00-1cbcf3a3292a",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          ...
+        >
+      ]
+    ],
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694c-52f3-76da-a69e-49940d1c9e62",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          ...
+        >
+      ]
+    ],
+    [[]]
+  ],
+  [
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "01906948-7c0c-7957-b1f7-9965a633437d",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "018e5ce8-cfa1-7723-8784-68c92395321c",
+          location_text: "Großer Ehrbar Saal\r\nMühlgasse 28 - 30\r\n1040 Wien",
+          ...
+        >
+      ]
+    ],
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694b-1f08-7b96-9ffb-4b719832d7ed",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "018e5ce8-cfa1-7723-8784-68c92395321c",
+          ...
+        >
+      ],
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694b-1f76-7a52-8f74-36ef084c8739",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          ...
+        >
+      ],
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694b-5aa9-7e09-a0a5-699c20c3601d",
+          title: nil,
+          text: nil,
+          ...
+        >
+      ]
+    ]
+  ],
+  [
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694f-a311-75fd-bff8-cc80b409b715",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          location_id: "018e5ce8-d9a5-7f8e-adde-62607b5098ed",
+          ...
+        >
+      ],
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694f-ab98-764c-8e9c-0cfc4b7b5324",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          ...
+        >
+      ]
+    ]
+  ],
+  [
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "01906947-98e7-76e5-bcbc-fa4d19da9998",
+          title: nil,
+          text: nil,
+          parentevent_id: nil,
+          ...
+        >
+      ]
+    ],
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "01906947-c017-7d38-b3bf-222ceb8ea8a4",
+          title: nil,
+          text: nil,
+          ...
+        >
+      ],
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "01906947-d7e8-7255-8f64-0452c74b461a",
+          title: nil,
+          ...
+        >
+      ],
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "01906948-2616-73b3-a404-2becefa3c2e6",
+          ...
+        >
+      ],
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          ...
+        >
+      ],
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          ...
+        >
+      ],
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          ...
+        >
+      ],
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          ...
+        >
+      ],
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          ...
+        >
+      ],
+      [#MyApp.Showtime<ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>, ...>],
+      [#MyApp.Showtime<...>],
+      [...]
+    ]
+  ],
+  [
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694c-f26b-7d52-89a2-15e9d9e57c42",
+          title: nil,
+          text: nil,
+          ...
+        >
+      ]
+    ],
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694e-b9ba-71fc-967d-a1fea14734e5",
+          title: nil,
+          ...
+        >
+      ]
+    ]
+  ],
+  [
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694d-7692-739e-b310-2da2a438b01c",
+          title: nil,
+          ...
+        >
+      ]
+    ],
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694a-adc5-71e7-b714-d44f08e80b38",
+          ...
+        >
+      ]
+    ]
+  ],
+  [
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          id: "0190694d-3929-7309-89a8-feca85dadcb9",
+          ...
+        >
+      ]
+    ],
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          ...
+        >
+      ]
+    ]
+  ],
+  [
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          event: #Ash.NotLoaded<:relationship, field: :event>,
+          __meta__: #Ecto.Schema.Metadata<:loaded, "showtimes">,
+          ...
+        >
+      ]
+    ]
+  ],
+  [[[]]],
+  [
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          location: #Ash.NotLoaded<:relationship, field: :location>,
+          ...
+        >
+      ]
+    ]
+  ],
+  [
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          parentevent: #Ash.NotLoaded<:relationship, field: :parentevent>,
+          ...
+        >
+      ]
+    ]
+  ],
+  [
+    [
+      [
+        #MyApp.Showtime<
+          ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>,
+          days: #Ash.NotLoaded<:calculation, field: :days>,
+          ...
+        >
+      ],
+      [#MyApp.Showtime<ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>, ...>]
+    ],
+    [
+      [#MyApp.Showtime<ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>, ...>],
+      [#MyApp.Showtime<...>]
+    ]
+  ],
+  [
+    [[#MyApp.Showtime<ev_geheges: #Ash.NotLoaded<:calculation, field: :ev_geheges>, ...>]],
+    [[#MyApp.Showtime<...>]]
+  ],
+  [[[#MyApp.Showtime<...>]]],
+  [[[...]], [...]],
+  [[...]],
+  [...],
+  ...
+]
+```
+
+```elixir
+
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+...
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/my_sulu_components/blocks/panelslider.html.ex:25:33: MyAppWeb.MySuluComponents.Blocks.Panelslider."main (overridable 1)"/1
+
+    warning: MyApp.Pudel.Albumlists.get_albumlist/1 is undefined (module MyApp.Pudel.Albumlists is not available or is yet to be defined)
+    │
+ 19 │     MyApp.Pudel.Albumlists.get_albumlist(opts)
+    │                            ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/albums_live/show_albums_lc.ex:19:28: MyAppWeb.AlbumsLive.ShowAlbumsLc.find_albums/1
+
+    warning: module attribute @impl was not set for function render/1 callback (specified in Phoenix.LiveView). This either means you forgot to add the "@impl true" annotation before the definition or that you are accidentally overriding this callback
+    │
+ 34 │   def render(assigns) do
+    │   ~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_web/albums_live/albums_live.ex:34: MyAppWeb.AlbumsLive (module)
+
+    warning: MyAppWeb.BreadcrumbC.main/1 is undefined (module MyAppWeb.BreadcrumbC is not available or is yet to be defined)
+    │
+ 11 │       <MyAppWeb.BreadcrumbC.main context={@context} />
+    │                             ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/my_sulu_components/layout/pagebody_c.html.ex:11:29: MyAppWeb.MySuluComponents.Layout.PageBodyC."main (overridable 1)"/1
+
+    warning: MyAppWeb.FooterC.outer/1 is undefined (module MyAppWeb.FooterC is not available or is yet to be defined)
+    │
+ 13 │       <MyAppWeb.FooterC.outer context={@context} />
+    │                         ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/my_sulu_components/layout/pagebody_c.html.ex:13:25: MyAppWeb.MySuluComponents.Layout.PageBodyC."main (overridable 1)"/1
+
+    warning: MyAppWeb.HeaderC.main/1 is undefined (module MyAppWeb.HeaderC is not available or is yet to be defined)
+    │
+ 10 │       <MyAppWeb.HeaderC.main class="bg-ma_gelbbg" context={@context} />
+    │                         ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/my_sulu_components/layout/pagebody_c.html.ex:10:25: MyAppWeb.MySuluComponents.Layout.PageBodyC."main (overridable 1)"/1
+
+    warning: MavuBeUserUi.default_conf/1 is undefined (module MavuBeUserUi is not available or is yet to be defined)
+    │
+ 10 │         be_user_ui_conf: MavuBeUserUi.default_conf(%{})
+    │                                       ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_be/be_user_ui/be_user_live.ex:10:39: MyAppBe.BeUserUi.BeUserLive.mount/3
+
+    warning: undefined attribute "%}" in slot "colheader" for component MyAppBe.MavuDatagrid.datagrid_c/1
+    │
+ 52 │     <:colheader :let={%{name: name}} %} for_cols="*" class="text-left">
+    │     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_be/showtimes/showtime_list_lc.html.heex:52: (file)
+
+    warning: undefined attribute "slug" in slot "pill" for component MyAppWeb.Components.HorizontalFiltersC.main/1
+    │
+ 31 │             <:pill slug={nil}>Alle</:pill>
+    │             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_web/day_live/festivalprogramm_c.html.ex:31: (file)
+
+    warning: undefined attribute "slug" in slot "pill" for component MyAppWeb.Components.HorizontalFiltersC.main/1
+    │
+ 42 │               slug={item.tag[:slug]}
+    │               ~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_web/day_live/festivalprogramm_c.html.ex:42: (file)
+
+    warning: undefined attribute "max" for component MyAppWeb.DayLive.ShowtimelistHelpersC.showtime/1
+    │
+ 89 │         max={10}
+    │         ~~~~~~~~
+    │
+    └─ lib/my_app_web/day_live/festivalprogramm_c.html.ex:89: (file)
+
+    warning: undefined attribute "limit" for component MyAppWeb.DayLive.ShowtimelistHelpersC.showtime/1
+    │
+ 90 │         limit={8}
+    │         ~~~~~~~~~
+    │
+    └─ lib/my_app_web/day_live/festivalprogramm_c.html.ex:90: (file)
+
+    warning: undefined attribute "myself" for component MyAppWeb.DayLive.ShowtimelistHelpersC.showtime/1
+    │
+ 88 │         myself={@myself}
+    │         ~~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_web/day_live/festivalprogramm_c.html.ex:88: (file)
+
+    warning: undefined attribute "list" for component MyAppBe.MavuList.LabelComponent.paint/1
+    │
+ 87 │         <MyAppBe.MavuList.LabelComponent.paint list={@items_filtered} name={col.key} />
+    │         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_be/legacy_locations_live/legacy_location_list_component.html.heex:87: (file)
+
+    warning: undefined attribute "name" for component MyAppBe.MavuList.LabelComponent.paint/1
+    │
+ 87 │         <MyAppBe.MavuList.LabelComponent.paint list={@items_filtered} name={col.key} />
+    │         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_be/legacy_locations_live/legacy_location_list_component.html.heex:87: (file)
+
+    warning: module attribute @impl was not set for function render/1 callback (specified in Phoenix.LiveView). This either means you forgot to add the "@impl true" annotation before the definition or that you are accidentally overriding this callback
+    │
+ 34 │   def render(assigns) do
+    │   ~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_web/locations_live/locations_live.ex:34: MyAppWeb.LocationsLive (module)
+
+    warning: undefined attribute "list" for component MyAppBe.MavuList.LabelComponent.paint/1
+    │
+ 52 │         <MyAppBe.MavuList.LabelComponent.paint list={@items_filtered} name={col.key} />
+    │         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_be/_bit/mavu_tags_live/mavu_tag_list_component.html.heex:52: (file)
+
+    warning: undefined attribute "name" for component MyAppBe.MavuList.LabelComponent.paint/1
+    │
+ 52 │         <MyAppBe.MavuList.LabelComponent.paint list={@items_filtered} name={col.key} />
+    │         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_be/_bit/mavu_tags_live/mavu_tag_list_component.html.heex:52: (file)
+
+     warning: undefined attribute "list" for component MyAppBe.MavuList.LabelComponent.paint/1
+     │
+ 107 │         <MyAppBe.MavuList.LabelComponent.paint list={@items_filtered} name={col.key} />
+     │         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     │
+     └─ lib/my_app_be/albums_live/album_list_component.html.heex:107: (file)
+
+     warning: undefined attribute "name" for component MyAppBe.MavuList.LabelComponent.paint/1
+     │
+ 107 │         <MyAppBe.MavuList.LabelComponent.paint list={@items_filtered} name={col.key} />
+     │         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     │
+     └─ lib/my_app_be/albums_live/album_list_component.html.heex:107: (file)
+
+     warning: undefined attribute "list" for component MyAppBe.MavuList.LabelComponent.paint/1
+     │
+ 106 │         <MyAppBe.MavuList.LabelComponent.paint list={@items_filtered} name={col.key} />
+     │         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     │
+     └─ lib/my_app_be/locations_live/location_list_component.html.heex:106: (file)
+
+     warning: undefined attribute "name" for component MyAppBe.MavuList.LabelComponent.paint/1
+     │
+ 106 │         <MyAppBe.MavuList.LabelComponent.paint list={@items_filtered} name={col.key} />
+     │         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     │
+     └─ lib/my_app_be/locations_live/location_list_component.html.heex:106: (file)
+
+    warning: MyAppWeb.TeaserlistC.main/1 is undefined (module MyAppWeb.TeaserlistC is not available or is yet to be defined)
+    │
+ 23 │     <MyAppWeb.TeaserlistC.main block={@block} class={@class} context={@context} {@rest} />
+    │                           ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/my_sulu_components/blocks/special_element_block.html.ex:23:27: MyAppWeb.MySuluComponents.Blocks.SpecialElementBlock."main (overridable 1)"/1
+
+     warning: undefined attribute "context" for component MyAppWeb.DayLive.EventdetailC.showtime/1
+     │
+ 309 │             <.showtime st={st} prev={prev} context={@context} main_showtime={@main_showtime} />
+     │             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     │
+     └─ lib/my_app_web/day_live/eventdetail_c.html.ex:309: (file)
+
+     warning: no route path for MyAppWeb.Router matches "/#{assigns.context.lang}/agent/#{assigns.agent.id}"
+     │
+ 350 │       navigate={~p"/#{@context.lang}/agent/#{@agent.id}"}
+     │       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     │
+     └─ (my_app 0.7.17) lib/my_app_web/day_live/eventdetail_c.html.ex:350: MyAppWeb.DayLive.EventdetailC.veranstalterblock/1
+
+    warning: Tails.classes/2 is undefined or private. Did you mean:
+
+          * classes/1
+
+    │
+ 18 │         class={Tails.classes("tab", [{"tab-active", tab.active?}]) |> to_string()}
+    │         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ (my_app 0.7.17) lib/my_app_be/_bit/mavu_be_user_ui/be_user_edit_lc.html.heex:18: MyAppBe.MavuBeUserUi.BeUserEditLc.render/1
+
+    warning: module attribute @impl was not set for function render/1 callback (specified in Phoenix.LiveView). This either means you forgot to add the "@impl true" annotation before the definition or that you are accidentally overriding this callback
+    │
+ 25 │   def render(assigns) do
+    │   ~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_web/home_live/home_live.ex:25: MyAppWeb.HomeLive (module)
+
+    warning: undefined attribute "list" for component MyAppBe.MavuList.LabelComponent.paint/1
+    │
+ 87 │         <MyAppBe.MavuList.LabelComponent.paint list={@items_filtered} name={col.key} />
+    │         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_be/_bit/tagged_rodents_live/tagged_rodent_list_lc.html.heex:87: (file)
+
+    warning: undefined attribute "name" for component MyAppBe.MavuList.LabelComponent.paint/1
+    │
+ 87 │         <MyAppBe.MavuList.LabelComponent.paint list={@items_filtered} name={col.key} />
+    │         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_be/_bit/tagged_rodents_live/tagged_rodent_list_lc.html.heex:87: (file)
+
+    warning: undefined attribute "list" for component MyAppBe.MavuList.LabelComponent.paint/1
+    │
+ 87 │         <MyAppBe.MavuList.LabelComponent.paint list={@items_filtered} name={col.key} />
+    │         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_be/legacy_events_live/legacy_event_list_component.html.heex:87: (file)
+
+    warning: undefined attribute "name" for component MyAppBe.MavuList.LabelComponent.paint/1
+    │
+ 87 │         <MyAppBe.MavuList.LabelComponent.paint list={@items_filtered} name={col.key} />
+    │         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_be/legacy_events_live/legacy_event_list_component.html.heex:87: (file)
+
+    warning: Flickrpix.request/1 is undefined (module Flickrpix is not available or is yet to be defined)
+    │
+ 10 │     |> Flickrpix.request()
+    │                  ~
+    │
+    └─ (my_app 0.7.17) lib/my_app/albums/albums.ex:10:18: MyApp.Albums.create_new_photoset_for_album/3
+
+    warning: undefined attribute "list" for component MyAppBe.MavuList.LabelComponent.paint/1
+    │
+ 44 │                         list={@items_filtered}
+    │                         ~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_be/_bit/obanjobs_live/obanjob_list_component.html.heex:44: (file)
+
+    warning: MyAppWeb.DividerC.main/1 is undefined (module MyAppWeb.DividerC is not available or is yet to be defined)
+    │
+ 52 │     <MyAppWeb.DividerC.main {assigns} />
+    │                        ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/my_sulu_components/my_custom_element_mapper.html.ex:52:24: MyAppWeb.MySuluComponents.MyCustomElementMapper.component_for/1
+
+    warning: undefined attribute "name" for component MyAppBe.MavuList.LabelComponent.paint/1
+    │
+ 45 │                         name={col.name}
+    │                         ~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_be/_bit/obanjobs_live/obanjob_list_component.html.heex:45: (file)
+
+    warning: MyAppWeb.FollowblockC.main/1 is undefined (module MyAppWeb.FollowblockC is not available or is yet to be defined)
+    │
+ 70 │     <MyAppWeb.FollowblockC.main {assigns} />
+    │                            ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/my_sulu_components/my_custom_element_mapper.html.ex:70:28: MyAppWeb.MySuluComponents.MyCustomElementMapper.component_for/1
+
+    warning: undefined attribute "list" for component MyAppBe.MavuList.LabelComponent.paint/1
+    │
+ 57 │         <MyAppBe.MavuList.LabelComponent.paint list={@items_filtered} name={col.key} />
+    │         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_be/_bit/mavu_tagcats_live/mavu_tagcat_list_component.html.heex:57: (file)
+
+    warning: MyAppWeb.FonttestC.main/1 is undefined (module MyAppWeb.FonttestC is not available or is yet to be defined)
+    │
+ 40 │     <MyAppWeb.FonttestC.main {assigns} />
+    │                         ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/my_sulu_components/my_custom_element_mapper.html.ex:40:25: MyAppWeb.MySuluComponents.MyCustomElementMapper.component_for/1
+
+    warning: undefined attribute "name" for component MyAppBe.MavuList.LabelComponent.paint/1
+    │
+ 57 │         <MyAppBe.MavuList.LabelComponent.paint list={@items_filtered} name={col.key} />
+    │         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_be/_bit/mavu_tagcats_live/mavu_tagcat_list_component.html.heex:57: (file)
+
+    warning: MyAppWeb.FooterC.main/1 is undefined (module MyAppWeb.FooterC is not available or is yet to be defined)
+    │
+ 94 │     <MyAppWeb.FooterC.main {assigns} />
+    │                       ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/my_sulu_components/my_custom_element_mapper.html.ex:94:23: MyAppWeb.MySuluComponents.MyCustomElementMapper.component_for/1
+
+    warning: module attribute @impl was not set for function handle_info/2 callback (specified in Phoenix.LiveView). This either means you forgot to add the "@impl true" annotation before the definition or that you are accidentally overriding this callback
+    │
+ 84 │   def handle_info({:mavu_bucket, "event_detail:" <> ev_id, _, _} = msg, socket) do
+    │   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_web/day_live/day_live.html.ex:84: MyAppWeb.DayLive (module)
+
+    warning: MyAppWeb.FooternavigationC.main/1 is undefined (module MyAppWeb.FooternavigationC is not available or is yet to be defined)
+    │
+ 88 │     <MyAppWeb.FooternavigationC.main {assigns} />
+    │                                 ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/my_sulu_components/my_custom_element_mapper.html.ex:88:33: MyAppWeb.MySuluComponents.MyCustomElementMapper.component_for/1
+
+    warning: MyAppWeb.HeadC.main/1 is undefined (module MyAppWeb.HeadC is not available or is yet to be defined)
+    │
+ 28 │     <MyAppWeb.HeadC.main {assigns} />
+    │                     ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/my_sulu_components/my_custom_element_mapper.html.ex:28:21: MyAppWeb.MySuluComponents.MyCustomElementMapper.component_for/1
+
+    warning: module attribute @impl was not set for function render/1 callback (specified in Phoenix.LiveView). This either means you forgot to add the "@impl true" annotation before the definition or that you are accidentally overriding this callback
+    │
+ 26 │   def render(assigns) do
+    │   ~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_web/search_live/search_live.ex:26: MyAppWeb.SearchLive (module)
+
+     warning: MyAppWeb.HeaderC.main/1 is undefined (module MyAppWeb.HeaderC is not available or is yet to be defined)
+     │
+ 100 │     <MyAppWeb.HeaderC.main {assigns} />
+     │                       ~
+     │
+     └─ (my_app 0.7.17) lib/my_app_web/my_sulu_components/my_custom_element_mapper.html.ex:100:23: MyAppWeb.MySuluComponents.MyCustomElementMapper.component_for/1
+
+    warning: MyAppWeb.KofferC.main/1 is undefined (module MyAppWeb.KofferC is not available or is yet to be defined)
+    │
+ 46 │     <MyAppWeb.KofferC.main {assigns} />
+    │                       ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/my_sulu_components/my_custom_element_mapper.html.ex:46:23: MyAppWeb.MySuluComponents.MyCustomElementMapper.component_for/1
+
+    warning: undefined attribute "list" for component MyAppBe.MavuList.LabelComponent.paint/1
+    │
+ 95 │         <MyAppBe.MavuList.LabelComponent.paint list={@items_filtered} name={col.key} />
+    │         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_be/agents_live/agent_list_component.html.heex:95: (file)
+
+    warning: undefined attribute "name" for component MyAppBe.MavuList.LabelComponent.paint/1
+    │
+ 95 │         <MyAppBe.MavuList.LabelComponent.paint list={@items_filtered} name={col.key} />
+    │         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_be/agents_live/agent_list_component.html.heex:95: (file)
+
+    warning: MyAppWeb.TeaserlistC.main/1 is undefined (module MyAppWeb.TeaserlistC is not available or is yet to be defined)
+    │
+ 34 │     <MyAppWeb.TeaserlistC.main {assigns} />
+    │                           ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/my_sulu_components/my_custom_element_mapper.html.ex:34:27: MyAppWeb.MySuluComponents.MyCustomElementMapper.component_for/1
+
+    warning: MyAppWeb.TestpageC.main/1 is undefined (module MyAppWeb.TestpageC is not available or is yet to be defined)
+    │
+ 76 │     <MyAppWeb.TestpageC.main {assigns} />
+    │                         ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/my_sulu_components/my_custom_element_mapper.html.ex:76:25: MyAppWeb.MySuluComponents.MyCustomElementMapper.component_for/1
+
+     warning: Phoenix.LiveView.push_redirect/2 is deprecated. Use push_navigate/2 instead
+     │
+ 169 │         %MyApp.Agent{} -> socket |> push_redirect(to: ~p"/be/agents/?rec=#{target_item.id}")
+     │                                     ~
+     │
+     └─ (my_app 0.7.17) lib/my_app_be/tools_live/tools_create_x_from_y_lc.html.ex:169:37: MyAppBe.ToolsLive.ToolsCreateXFromYLc.handle_event/3
+     └─ (my_app 0.7.17) lib/my_app_be/tools_live/tools_create_x_from_y_lc.html.ex:170:37: MyAppBe.ToolsLive.ToolsCreateXFromYLc.handle_event/3
+     └─ (my_app 0.7.17) lib/my_app_be/tools_live/tools_create_x_from_y_lc.html.ex:171:40: MyAppBe.ToolsLive.ToolsCreateXFromYLc.handle_event/3
+
+    warning: Phoenix.Component.live_flash/2 is deprecated. Use Phoenix.Flash.get/2 in Phoenix v1.7+
+    │
+ 39 │     email = live_flash(socket.assigns.flash, :email)
+    │             ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_be/be_accounts/be_user_login_live.ex:39:13: MyAppBe.BeAccounts.BeUserLoginLive.mount/3
+
+    warning: module attribute @impl was not set for function render/1 callback (specified in Phoenix.LiveComponent). This either means you forgot to add the "@impl true" annotation before the definition or that you are accidentally overriding this callback
+    │
+ 18 │   def render(assigns) do
+    │   ~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_web/day_live/showtimelist_lc.html.ex:18: MyAppWeb.DayLive.ShowtimelistC (module)
+
+    warning: MyAppWeb.TextpanelC.main/1 is undefined (module MyAppWeb.TextpanelC is not available or is yet to be defined)
+    │
+ 64 │     <MyAppWeb.TextpanelC.main {assigns} />
+    │                          ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/my_sulu_components/my_custom_element_mapper.html.ex:64:26: MyAppWeb.MySuluComponents.MyCustomElementMapper.component_for/1
+
+    warning: undefined attribute "max" for component MyAppWeb.DayLive.ShowtimelistHelpersC.showtime/1
+    │
+ 41 │                 max={10}
+    │                 ~~~~~~~~
+    │
+    └─ lib/my_app_web/day_live/showtimelist_lc.html.ex:41: (file)
+
+    warning: undefined attribute "limit" for component MyAppWeb.DayLive.ShowtimelistHelpersC.showtime/1
+    │
+ 42 │                 limit={8}
+    │                 ~~~~~~~~~
+    │
+    └─ lib/my_app_web/day_live/showtimelist_lc.html.ex:42: (file)
+
+    warning: MyAppWeb.TopnavigationC.main/1 is undefined (module MyAppWeb.TopnavigationC is not available or is yet to be defined)
+    │
+ 82 │     <MyAppWeb.TopnavigationC.main {assigns} />
+    │                              ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/my_sulu_components/my_custom_element_mapper.html.ex:82:30: MyAppWeb.MySuluComponents.MyCustomElementMapper.component_for/1
+
+    warning: undefined attribute "myself" for component MyAppWeb.DayLive.ShowtimelistHelpersC.showtime/1
+    │
+ 40 │                 myself={@myself}
+    │                 ~~~~~~~~~~~~~~~~
+    │
+    └─ lib/my_app_web/day_live/showtimelist_lc.html.ex:40: (file)
+
+    warning: no route path for MyAppWeb.Router matches "/app/js/app.js"
+    │
+ 14 │     <script defer phx-track-static type="text/javascript" src={~p"/app/js/app.js"}>
+    │     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/components/layouts/sulu_root.html.heex:14: MyAppWeb.Layouts.sulu_root/1
+
+    warning: no route path for MyAppWeb.Router matches "/app/css/sulu.css?#{System.os_time(:second)}"
+    │
+ 10 │     <link phx-track-static rel="stylesheet" href={~p"/app/css/sulu.css?#{System.os_time(:second)}"} />
+    │     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/components/layouts/sulu_root.html.heex:10: MyAppWeb.Layouts.sulu_root/1
+
+    warning: MyAppWeb.WideimageC.main/1 is undefined (module MyAppWeb.WideimageC is not available or is yet to be defined)
+    │
+ 58 │     <MyAppWeb.WideimageC.main {assigns} />
+    │                          ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/my_sulu_components/my_custom_element_mapper.html.ex:58:26: MyAppWeb.MySuluComponents.MyCustomElementMapper.component_for/1
+
+     warning: MyApp.TaggedRodent.get_by_id/1 is undefined or private. Did you mean:
+
+           * get/2
+           * get/3
+
+     │
+ 111 │   def resolve(id) when is_uuid_representation(id), do: __MODULE__.get_by_id(id)
+     │                                                                   ~
+     │
+     └─ (my_app 0.7.17) lib/my_app/_bit/tagged_rodents/resources/tagged_rodent.ex:111:67: MyApp.TaggedRodent.resolve/1
+
+     warning: MyApp.TaggedRodent.get_by_id!/1 is undefined or private
+     │
+ 116 │   def resolve!(id) when is_uuid_representation(id), do: __MODULE__.get_by_id!(id)
+     │                                                                    ~
+     │
+     └─ (my_app 0.7.17) lib/my_app/_bit/tagged_rodents/resources/tagged_rodent.ex:116:68: MyApp.TaggedRodent.resolve!/1
+
+     warning: MyApp.TaggedRodent.get_by_slug/1 is undefined or private
+     │
+ 112 │   def resolve(id) when is_binary(id), do: __MODULE__.get_by_slug(id)
+     │                                                      ~
+     │
+     └─ (my_app 0.7.17) lib/my_app/_bit/tagged_rodents/resources/tagged_rodent.ex:112:54: MyApp.TaggedRodent.resolve/1
+
+     warning: MyApp.TaggedRodent.get_by_slug!/1 is undefined or private
+     │
+ 117 │   def resolve!(id) when is_binary(id), do: __MODULE__.get_by_slug!(id)
+     │                                                       ~
+     │
+     └─ (my_app 0.7.17) lib/my_app/_bit/tagged_rodents/resources/tagged_rodent.ex:117:55: MyApp.TaggedRodent.resolve!/1
+
+    warning: variable "agent" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 10 │         agent =
+    │         ~
+    │
+    └─ (my_app 0.7.17) lib/my_app/pudel/tiny_agent.ex:10:9: MyApp.Pudel.TinyAgent.resolve0/2
+
+    warning: variable "opts" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 65 │   def save_photo_id_to_mavufile(photo_id, %MavuFile{} = mf, opts \\ []) do
+    │                                                             ~~~~
+    │
+    └─ (my_app 0.7.17) lib/my_app/eselfile/eselfiles.ex:65:61: MyApp.Eselfiles.save_photo_id_to_mavufile/3
+
+    warning: variable "opts" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 71 │   def remove_original_from_disk(%MavuFile{} = mf, opts \\ []) do
+    │                                                   ~~~~
+    │
+    └─ (my_app 0.7.17) lib/my_app/eselfile/eselfiles.ex:71:51: MyApp.Eselfiles.remove_original_from_disk/2
+
+    warning: variable "size" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 82 │       @get_image_size {_, {:ok, %{size: size}}} <- {imagepath, File.stat(imagepath)}
+    │                                         ~
+    │
+    └─ (my_app 0.7.17) lib/my_app/eselfile/eselfiles.ex:82:41: MyApp.Eselfiles.upgrade_image_in_event/2
+
+    warning: variable "opts" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 77 │   def upgrade_image_in_event(event, opts \\ []) do
+    │                                     ~~~~
+    │
+    └─ (my_app 0.7.17) lib/my_app/eselfile/eselfiles.ex:77:37: MyApp.Eselfiles.upgrade_image_in_event/2
+
+    warning: unused import Ash.Query
+    │
+ 16 │   import Ash.Query
+    │   ~
+    │
+    └─ lib/my_app/eselfile/eselfiles.ex:16:3
+
+    warning: clauses with the same name and arity (number of arguments) should be grouped together, "def get_listdata/1" was previously defined (lib/my_app_web/day_live/showtimelist_lc.html.ex:77)
+    │
+ 93 │   def get_listdata(_), do: []
+    │       ~
+    │
+    └─ lib/my_app_web/day_live/showtimelist_lc.html.ex:93:7
+
+    warning: Spark.OptionsHelpers.docs/1 is deprecated. Use `Spark.Options.docs/1` instead
+    │
+ 16 │    #{Spark.OptionsHelpers.docs(@constraints)}
+    │                           ~
+    │
+    └─ lib/my_app/_bit/mavu_tags/types/mavu_tag_uuid_type.ex:16:27: MyApp.MavuTags.Types.MavuTagUuidType (module)
+
+    warning: redefining @impl attribute previously set at line 59
+    │
+ 60 │   @impl true
+    │   ~~~~~~~~~~
+    │
+    └─ lib/my_app_web/day_live/day_live.html.ex:60: MyAppWeb.DayLive (module)
+
+    warning: variable "msg" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 84 │   def handle_info({:mavu_bucket, "event_detail:" <> ev_id, _, _} = msg, socket) do
+    │                                                                    ~~~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/day_live/day_live.html.ex:84:68: MyAppWeb.DayLive.handle_info/2
+
+    warning: the underscored variable "_assigns" is used after being set. A leading underscore indicates that the value of the variable should be ignored. If this is intended please rename the variable to remove the underscore
+    │
+ 25 │       |> assign(_assigns)
+    │                 ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_be/showtimes/showtimes_for_entity_lc.ex:25:17: MyAppBe.Showtimes.ShowtimesForEntityLc.update/2
+
+    warning: the underscored variable "_assigns" is used after being set. A leading underscore indicates that the value of the variable should be ignored. If this is intended please rename the variable to remove the underscore
+    │
+ 26 │       |> assign(st_id: _assigns.context.params["st_rec"])
+    │                        ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_be/showtimes/showtimes_for_entity_lc.ex:26:24: MyAppBe.Showtimes.ShowtimesForEntityLc.update/2
+
+    warning: the underscored variable "_assigns" is used after being set. A leading underscore indicates that the value of the variable should be ignored. If this is intended please rename the variable to remove the underscore
+    │
+ 27 │       |> assign(items: load_items(_assigns))
+    │                                   ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_be/showtimes/showtimes_for_entity_lc.ex:27:35: MyAppBe.Showtimes.ShowtimesForEntityLc.update/2
+
+     warning: variable "location_ids" is unused (if the variable is not meant to be used, prefix it with an underscore)
+     │
+ 121 │     location_ids =
+     │     ~~~~~~~~~~~~
+     │
+     └─ (my_app 0.7.17) lib/my_app/pudel/detail_event.ex:121:5: MyApp.Pudel.DetailEvent.get_single_location_id/1
+
+    warning: unused import MyApp.MavuImg
+    │
+  4 │   import MyApp.MavuImg
+    │   ~
+    │
+    └─ lib/my_app_web/locations_live/location_list_c.html.ex:4:3
+
+     warning: variable "opts" is unused (if the variable is not meant to be used, prefix it with an underscore)
+     │
+ 103 │   def resolve_hour(hr_float, opts) when is_hour(hr_float), do: {:ok, hr_float}
+     │                              ~~~~
+     │
+     └─ (my_app 0.7.17) lib/my_app/hours.ex:103:30: MyApp.Hours.resolve_hour/2
+
+    warning: unused alias Decimal
+    │
+  3 │   alias Ash.Type.Decimal
+    │   ~
+    │
+    └─ lib/my_app/hours.ex:3:3
+
+     warning: unused import MyApp.MavuEntities.UuidGuards
+     │
+ 100 │   import MyApp.MavuEntities.UuidGuards
+     │   ~
+     │
+     └─ lib/my_app/hours.ex:100:3
+
+    warning: unused alias Days
+    │
+  5 │   alias MyApp.Days
+    │   ~
+    │
+    └─ lib/my_app/pudel/daylists.ex:5:3
+
+    warning: unused alias TinyEvent
+    │
+  3 │   alias MyApp.Pudel.TinyEvent
+    │   ~
+    │
+    └─ lib/my_app/pudel/daylists.ex:3:3
+
+    warning: unused alias MavuTags
+    │
+  2 │   alias MyApp.MavuTags
+    │   ~
+    │
+    └─ lib/my_app/pudel/locationlists.ex:2:3
+
+    warning: variable "error_info" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 42 │       {:error, error_info} ->
+    │                ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/_bit/mavu_sulu/blockhelpers.ex:42:16: MyAppWeb.MavuSulu.Blockhelpers.sulu_navigation_root_tree/3
+
+    warning: variable "opts" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 16 │   def get_event_headers(opts \\ []) do
+    │                         ~~~~
+    │
+    └─ (my_app 0.7.17) lib/my_app/oai/oai_event.ex:16:25: MyApp.Oai.OaiEvent.get_event_headers/1
+
+     warning: module attribute @doc was set but no definition follows it
+     │
+ 164 │   @doc """
+     │   ~~~~~~~~
+     │
+     └─ lib/my_app/oai/oai_event.ex:164: MyApp.Oai.OaiEvent (module)
+
+    warning: unused import MyAppWeb.MavuSulu.BlockmapperHelpers
+    │
+  4 │   import MyAppWeb.MavuSulu.BlockmapperHelpers
+    │   ~
+    │
+    └─ lib/my_app_web/my_sulu_components/my_page_mapper.html.ex:4:3
+
+    warning: variable id in code block has no effect as it is never returned (remove the variable or assign it to _ to avoid warnings)
+    │
+  5 │     id
+    │     ~
+    │
+    └─ (my_app 0.7.17) lib/my_app/pudel/tiny_location.ex:5:5: MyApp.Pudel.TinyLocation.resolve0/2
+
+    warning: unused import MyApp.MavuImg
+    │
+  4 │   import MyApp.MavuImg
+    │   ~
+    │
+    └─ lib/my_app_web/components/tipps_for_entity_detail_c.html.ex:4:3
+
+    warning: unused alias MavuFiles
+    │
+  2 │   alias MyApp.MavuFiles
+    │   ~
+    │
+    └─ lib/my_app_be/_bit/mavu_files_live/components.html.ex:2:3
+
+    warning: unused import MyAppWeb.MavuSulu.Blockhelpers
+    │
+  4 │   import MyAppWeb.MavuSulu.Blockhelpers
+    │   ~
+    │
+    └─ lib/my_app_web/my_sulu_components/blocks/special_element_block.html.ex:4:3
+
+    warning: variable "result" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 89 │         {:ok, result} ->
+    │               ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_be/showtimes/showtime_edit_lc.ex:89:15: MyAppBe.Showtimes.ShowtimeEditLc.handle_event/3
+
+    warning: unused import MyApp.Days
+    │
+  7 │   import MyApp.Days
+    │   ~
+    │
+    └─ lib/my_app/types/my_day_ash_type.ex:7:3
+
+    warning: unused import Phoenix.HTML
+    │
+  4 │   import Phoenix.HTML
+    │   ~
+    │
+    └─ lib/my_app_be/be_email/mail_layout_helpers.ex:4:3
+
+    warning: unused import Phoenix.HTML.Form
+    │
+  5 │   import Phoenix.HTML.Form
+    │   ~
+    │
+    └─ lib/my_app_be/be_email/mail_layout_helpers.ex:5:3
+
+    warning: module attribute @variant was set but never used
+    │
+ 34 │   @variant 2
+    │   ~~~~~~~~~~
+    │
+    └─ lib/my_app/_bit/mavu_entities/mavu_uuidv7.ex:34: MyApp.MavuEntities.MavuUuidv7 (module)
+
+    warning: Spark.OptionsHelpers.docs/1 is deprecated. Use `Spark.Options.docs/1` instead
+    │
+ 25 │    #{Spark.OptionsHelpers.docs(@constraints)}
+    │                           ~
+    │
+    └─ lib/my_app/_bit/mavu_files/types/mavu_file_uuid_type.ex:25:27: MyApp.MavuFiles.Types.MavuFileUuidType (module)
+
+    warning: variable "params" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 16 │   defp apply_action(socket, :index, params) do
+    │                                     ~~~~~~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/locations_live/locations_live.ex:16:37: MyAppWeb.LocationsLive.apply_action/3
+
+    warning: unused import PhoenixHTMLHelpers.Form
+    │
+  9 │   import PhoenixHTMLHelpers.Form
+    │   ~
+    │
+    └─ lib/my_app_be/my_ashfilter_components/mavulist_columnchooser_lc/mavulist_columnchooser_lc.ex:9:3
+
+    warning: variable "agent" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 31 │   def create(MyApp.Agent = agent, %MyApp.Location{} = loc) do
+    │                            ~~~~~
+    │
+    └─ (my_app 0.7.17) lib/my_app/create_x_from_y.ex:31:28: MyApp.CreateXFromY.create/2
+
+    warning: unused alias MavuFiles
+    │
+  4 │   alias MyApp.MavuFiles
+    │   ~
+    │
+    └─ lib/my_app_be/_bit/mavu_files_live/filefield_c.html.ex:4:3
+
+    warning: unused import MyApp.MavuImg
+    │
+  4 │   import MyApp.MavuImg
+    │   ~
+    │
+    └─ lib/my_app_web/day_live/festivalprogramm_c.html.ex:4:3
+
+    warning: variable "block" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 43 │   def get_default_classes(block, %{blocklevel: 0} = context),
+    │                           ~~~~~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/my_sulu_components/blocks/image_block.html.ex:43:27: MyAppWeb.MySuluComponents.Blocks.ImageBlock.get_default_classes/2
+
+    warning: variable "context" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 43 │   def get_default_classes(block, %{blocklevel: 0} = context),
+    │                                                     ~~~~~~~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/my_sulu_components/blocks/image_block.html.ex:43:53: MyAppWeb.MySuluComponents.Blocks.ImageBlock.get_default_classes/2
+
+    warning: unused import Ecto.Query
+    │
+  5 │   import Ecto.Query
+    │   ~
+    │
+    └─ lib/my_app_be/albums_live/album_altnames_lc.html.ex:5:3
+
+    warning: unused import Phoenix.HTML.Form
+    │
+  3 │   import Phoenix.HTML.Form
+    │   ~
+    │
+    └─ lib/my_app_be/albums_live/album_altnames_lc.html.ex:3:3
+
+    warning: variable "list_state" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 17 │         %{conf: %{ash_resource: MyApp.Event}} = list_state
+    │                                                 ~~~~~~~~~~
+    │
+    └─ (my_app 0.7.17) lib/my_app_be/my_bulkedit_components/bulkedit_mapper.ex:17:49: MyAppBe.MyBulkeditComponents.MyBulkeditMapper.get_component_for_field/2
+
+    warning: variable "params" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 16 │   defp apply_action(socket, :index, params) do
+    │                                     ~~~~~~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/albums_live/albums_live.ex:16:37: MyAppWeb.AlbumsLive.apply_action/3
+
+    warning: variable "definition" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 58 │   def url(definition, :flickr_original, {file, scope}, _options) do
+    │           ~~~~~~~~~~
+    │
+    └─ (my_app 0.7.17) lib/my_app/eselfile/eselfile_storage.ex:58:11: MyApp.EselfileStorage.url/4
+
+    warning: variable "file" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 58 │   def url(definition, :flickr_original, {file, scope}, _options) do
+    │                                          ~~~~
+    │
+    └─ (my_app 0.7.17) lib/my_app/eselfile/eselfile_storage.ex:58:42: MyApp.EselfileStorage.url/4
+
+    warning: variable "file" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 70 │   def url(definition, :original, {file, scope} = file_and_scope, _options) do
+    │                                   ~~~~
+    │
+    └─ (my_app 0.7.17) lib/my_app/eselfile/eselfile_storage.ex:70:35: MyApp.EselfileStorage.url/4
+
+    warning: clauses with the same name and arity (number of arguments) should be grouped together, "def url/4" was previously defined (lib/my_app/eselfile/eselfile_storage.ex:56)
+    │
+ 70 │   def url(definition, :original, {file, scope} = file_and_scope, _options) do
+    │       ~
+    │
+    └─ lib/my_app/eselfile/eselfile_storage.ex:70:7
+
+    warning: Spark.OptionsHelpers.docs/1 is deprecated. Use `Spark.Options.docs/1` instead
+    │
+ 21 │   #{Spark.OptionsHelpers.docs(@constraints)}
+    │                          ~
+    │
+    └─ lib/my_app/types/my_decimal_ash_type.ex:21:26: MyApp.Types.MyDecimalAshType (module)
+
+    warning: variable "opts" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 16 │   def get_location_headers(opts \\ []) do
+    │                            ~~~~
+    │
+    └─ (my_app 0.7.17) lib/my_app/oai/oai_location.ex:16:28: MyApp.Oai.OaiLocation.get_location_headers/1
+
+     warning: variable "error_info" is unused (if the variable is not meant to be used, prefix it with an underscore)
+     │
+ 164 │           {:error, error_info} ->
+     │                    ~
+     │
+     └─ (my_app 0.7.17) lib/my_app/oai/oai_location.ex:164:20: MyApp.Oai.OaiLocation.get_temporal/1
+
+     warning: variable "name" is unused (if the variable is not meant to be used, prefix it with an underscore)
+     │
+ 188 │     for name <- rec.names do
+     │         ~
+     │
+     └─ (my_app 0.7.17) lib/my_app/oai/oai_location.ex:188:9: MyApp.Oai.OaiLocation.get_names/1
+
+     warning: module attribute @doc was set but no definition follows it
+     │
+ 192 │   @doc """
+     │   ~~~~~~~~
+     │
+     └─ lib/my_app/oai/oai_location.ex:192: MyApp.Oai.OaiLocation (module)
+
+    warning: Spark.OptionsHelpers.docs/1 is deprecated. Use `Spark.Options.docs/1` instead
+    │
+ 24 │    #{Spark.OptionsHelpers.docs(@constraints)}
+    │                           ~
+    │
+    └─ lib/my_app/types/entity_uuid_type.ex:24:27: MyApp.Types.EntityUuidType (module)
+
+    warning: unused import MyAppWeb.MySuluComponents.MyBlockhelpers
+    │
+  5 │   import(MyAppWeb.MySuluComponents.MyBlockhelpers)
+    │   ~
+    │
+    └─ lib/my_app_web/my_sulu_components/blocks/panelslider.html.ex:5:3
+
+    warning: unused import Ecto.Query
+    │
+  5 │   import Ecto.Query
+    │   ~
+    │
+    └─ lib/my_app_be/locations_live/location_altnames_lc.html.ex:5:3
+
+    warning: unused import Phoenix.HTML.Form
+    │
+  3 │   import Phoenix.HTML.Form
+    │   ~
+    │
+    └─ lib/my_app_be/locations_live/location_altnames_lc.html.ex:3:3
+
+     warning: variable "opts" is unused (if the variable is not meant to be used, prefix it with an underscore)
+     │
+ 102 │   def get_missing_organizers(%MyApp.LegacyEvent{} = le, opts \\ []) do
+     │                                                         ~~~~
+     │
+     └─ (my_app 0.7.17) lib/my_app/legacy/legacy_event_import.ex:102:57: MyApp.LegacyEventImport.get_missing_organizers/2
+
+     warning: variable "rel_type" is unused (if the variable is not meant to be used, prefix it with an underscore)
+     │
+ 331 │             {rel_type, loc_id, text, daterec} ->
+     │              ~
+     │
+     └─ (my_app 0.7.17) lib/my_app/legacy/legacy_event_import.ex:331:14: MyApp.LegacyEventImport.add_showtime_to_imported_event/4
+
+    warning: unused import MyApp.MavuImg
+    │
+  4 │   import MyApp.MavuImg
+    │   ~
+    │
+    └─ lib/my_app_web/locations_live/locationdetail_c.html.ex:4:3
+
+    warning: Phoenix.HTML.Form.form_for/3 is undefined or private
+    │
+ 71 │     f = Phoenix.HTML.Form.form_for(cs, "#", as: :dummy)
+    │                           ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/utils/my_helpers.ex:71:27: MyAppWeb.MyHelpers.state_from_changeset/1
+
+     warning: Phoenix.HTML.Form.form_for/3 is undefined or private
+     │
+ 122 │         Phoenix.HTML.Form.form_for(form.source.arguments, "arguments",
+     │                           ~
+     │
+     └─ (my_app 0.7.17) lib/my_app_be/_bit/mavu_list_ashfilter/filter_form/arguments.ex:122:27: Phoenix.HTML.FormData.MyAppBe.MavuListAshfilter.FilterForm.Arguments.to_form/4
+
+    warning: variable "opts" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 16 │   def get_agent_headers(opts \\ []) do
+    │                         ~~~~
+    │
+    └─ (my_app 0.7.17) lib/my_app/oai/oai_agent.ex:16:25: MyApp.Oai.OaiAgent.get_agent_headers/1
+
+     warning: variable "error_info" is unused (if the variable is not meant to be used, prefix it with an underscore)
+     │
+ 165 │           {:error, error_info} ->
+     │                    ~
+     │
+     └─ (my_app 0.7.17) lib/my_app/oai/oai_agent.ex:165:20: MyApp.Oai.OaiAgent.get_temporal/1
+
+     warning: variable "name" is unused (if the variable is not meant to be used, prefix it with an underscore)
+     │
+ 189 │     for name <- rec.names do
+     │         ~
+     │
+     └─ (my_app 0.7.17) lib/my_app/oai/oai_agent.ex:189:9: MyApp.Oai.OaiAgent.get_names/1
+
+     warning: module attribute @doc was set but no definition follows it
+     │
+ 193 │   @doc """
+     │   ~~~~~~~~
+     │
+     └─ lib/my_app/oai/oai_agent.ex:193: MyApp.Oai.OaiAgent (module)
+
+    warning: variable "gehege" is unused (there is a variable with the same name in the context, use the pin operator (^) to match on it or prefix this variable with underscore if it is not meant to be used)
+    │
+ 16 │     gehege = gehege |> MavuTags.resolve!()
+    │     ~~~~~~
+    │
+    └─ (my_app 0.7.17) lib/my_app/pudel/programmlists.ex:16:5: MyApp.Pudel.Programmlists.get_programmlists_for_gehege/2
+
+    warning: variable "gehege" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 36 │   def get_programmlists_for_gehege(%{slug: slug} = gehege, opts), do: []
+    │                                                    ~~~~~~
+    │
+    └─ (my_app 0.7.17) lib/my_app/pudel/programmlists.ex:36:52: MyApp.Pudel.Programmlists.get_programmlists_for_gehege/2
+
+    warning: variable "opts" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 36 │   def get_programmlists_for_gehege(%{slug: slug} = gehege, opts), do: []
+    │                                                            ~~~~
+    │
+    └─ (my_app 0.7.17) lib/my_app/pudel/programmlists.ex:36:60: MyApp.Pudel.Programmlists.get_programmlists_for_gehege/2
+
+    warning: variable "slug" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 36 │   def get_programmlists_for_gehege(%{slug: slug} = gehege, opts), do: []
+    │                                            ~~~~
+    │
+    └─ (my_app 0.7.17) lib/my_app/pudel/programmlists.ex:36:44: MyApp.Pudel.Programmlists.get_programmlists_for_gehege/2
+
+    warning: unused alias Event
+    │
+  2 │   alias MyApp.Event
+    │   ~
+    │
+    └─ lib/my_app/pudel/programmlists.ex:2:3
+
+    warning: unused alias MavuEntities
+    │
+  2 │   alias MyApp.MavuEntities
+    │   ~
+    │
+    └─ lib/my_app_be/my_ashfilter_components/arrow_filter_c.html.ex:2:3
+
+    warning: variable "error_info" is unused (if the variable is not meant to be used, prefix it with an underscore)
+    │
+ 37 │       {:error, error_info} ->
+    │                ~
+    │
+    └─ (my_app 0.7.17) lib/my_app_web/_bit/mavu_sulu/suludata.ex:37:16: MyAppWeb.MavuSulu.Suludata.get_teasers/2
+
+     warning: variable "error_info" is unused (if the variable is not meant to be used, prefix it with an underscore)
+     │
+ 163 │       {:error, error_info} ->
+     │                ~
+     │
+     └─ (my_app 0.7.17) lib/my_app_web/_bit/mavu_sulu/suludata.ex:163:16: MyAppWeb.MavuSulu.Suludata.get_current_asset_block/1
+
+    warning: unused import MyApp.MavuImg
+    │
+  4 │   import MyApp.MavuImg
+    │   ~
+    │
+    └─ lib/my_app_web/albums_live/album_list_c.html.ex:4:3
+
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```

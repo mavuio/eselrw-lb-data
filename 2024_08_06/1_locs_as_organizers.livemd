@@ -1,0 +1,236 @@
+# 2024_08_06-1-locs_as_organizers
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+require Ecto.Query
+require Ash.Query
+import MyApp.MavuEntities.UuidGuards
+
+```
+
+## Section
+
+Neue Liste (Org und Loc eingetragen und unterschiedliche IDs):
+https://docs.google.com/spreadsheets/d/1_Odn3DOy34CCq9tiKBrEEBwp2cxBs4o9/edit?gid=2111264176#gid=2111264176
+
+wo eine (Pseudo-)Location als Organizer eingetragen ist und es eine Location mit anderer ID gibt --> Relation "organizer" mit Agent verknüpfen, also ca.:
+
+IF  Legacy Event: [Org ID is not empty] and [Loc ID is not the same as Org ID] ➜  THEN relate agent ["agent URL"] as "organizer" beim zugehörigen rewind-event
+
+optional: where "keep Loc" is "no" --> delete imported Location (trauen wir uns das? können wir die Legacy Loc ID vom Import auf den neu angelegten AG übertragen?)  ➜ legacy loc id in memo feld eintragen
+
+Get [Showtime Location] from [Loc ID] OR [Alt Loc] OR [Legacy Loc Street Address] OR leave empty (leer lassen ???) [1]
+
+[1] Showtimes Locations holen von entweder Loc ID (wenn vorhanden) oder Alt Loc Feld (Freitext, nicht verknüpft) oder von der Adresse der zu löschenden Pseudo-Location oder leer lassen
+
+```elixir
+legacy_events=MyApp.LegacyEvent
+|> Ash.Query.for_read(:read)
+|> Ash.Query.filter(not (is_nil(organiser_ids) or organiser_ids==[]))
+|> Ash.Query.filter(not (is_nil(location_ids)  or location_ids==[]))
+|> Ash.Query.filter(organiser_ids != location_ids)
+|> Ash.read!()
+  
+legacy_events|> Kino.DataTable.new()
+```
+
+```elixir
+# https://peterullrich.com/work-with-files-in-livebook
+
+file = Kino.Input.file("Upload your file", accept: ~w(.csv))
+
+```
+
+```elixir
+locmap=Kino.Input.read(file)
+|> Map.get(:file_ref)
+|> Kino.Input.file_path()
+|> File.stream!()
+|> CSV.decode!(headers: true)
+|> Enum.into([])
+
+locmap |> Kino.DataTable.new()
+```
+
+```elixir
+locmap |> List.first()
+```
+
+```elixir
+defmodule Helpers do
+  def get_locmap_entry_by_org_id(locmap, org_id) when is_integer(org_id) do
+    id_str = "#{org_id}"
+    Enum.find(locmap, fn x -> x["alte ID"] == id_str end)
+  end
+
+  def reassign_showtimes(ev, loc, agent, le_loc,le_ev) do
+    le_loc_new =
+      if le_loc do
+        Location.get_by_esel_legacy_id(le_loc.id) |> MavuUtils.on_error_nil()
+      end
+
+    %{
+      st_ev: ev[:title],
+      st_loc: loc[:title],
+      st_ag: agent[:title],
+      st_le_loc: le_loc[:name],
+      st_le_loc_id: le_loc[:id],
+      st_le_loc_new: le_loc_new[:title],
+      st_le_ev_alt_loc: le_ev[:alternative_location],
+    }
+    |> MavuUtils.log("reassign showtimes", :info)
+
+    # Get [Showtime Location] from [Loc ID] OR [Alt Loc] OR [Legacy Loc Street Address] OR leave empty (leer lassen ???) [1]
+
+    # [1] Showtimes: Locations holen von 
+
+    
+    # entweder Loc ID (wenn vorhanden)  [le_loc_new.id]
+    # oder Alt Loc Feld (Freitext, nicht verknüpft)  
+    # oder von der Adresse der zu löschenden Pseudo-Location 
+    # oder leer lassen
+  end
+end
+```
+
+```elixir
+mapping_result=for le <- legacy_events |> Enum.take(200000) do
+  case le do
+    %{location_ids: [loc_id], organiser_ids: [org_id]}
+    when loc_id > 1 and org_id > 1 and loc_id != org_id ->
+      # IF Legacy Event: [Org ID is not empty] 
+      # and [Loc ID is not the same as Org ID]
+
+      le_loc = LegacyLocation.resolve(loc_id) |> MavuUtils.on_error_nil()
+      le_org = LegacyLocation.resolve(org_id) |> MavuUtils.on_error_nil()
+
+      ret = %{loc_id: loc_id, org_id: org_id, loc: le_loc.name, org: le_org.name}
+
+      MyApp.Event.resolve(le.id)
+      |> case do
+        {:ok, ev} ->
+          # ➜ THEN relate agent ["agent URL"] as "organizer" beim zugehörigen rewind-event
+          ret = ret |> Map.put(:title, ev.title)
+
+          Helpers.get_locmap_entry_by_org_id(locmap, org_id)
+          |> case do
+            locmap_entry when is_map(locmap_entry) ->
+              agent_url = locmap_entry["agent URL"]
+
+              if MavuUtils.present?(agent_url) do
+                agent = Agent.resolve0(Path.basename(agent_url))
+
+                MyApp.Agents.assign_agent_to_event(agent, ev)
+
+                loc = Location.resolve0(locmap_entry["ID"])
+
+                st_res = Helpers.reassign_showtimes(ev, loc, agent, le_loc, le)
+
+                ret =
+                  ret
+                  |> Map.merge(st_res)
+
+                ret
+                |> update_in([:title], fn x ->
+                  " mapped event  #{ev |> to_webid0()} to #{agent |> to_webid0()} for  #{x}"
+                end)
+              else
+                ret
+                |> update_in([:title], fn x ->
+                  " agent_url not found for loc #{loc_id}, #{x}"
+                end)
+              end
+
+            _ ->
+              ret
+              |> update_in([:title], fn x -> " cannot get locmap-entry  for #{loc_id} #{x}" end)
+          end
+
+        _ ->
+          ret |> Map.put(:title, "event not found for #{le.id}")
+      end
+
+    _ ->
+      nil
+  end
+end
+|> Enum.reject(&is_nil/1)
+nil
+```
+
+```elixir
+mapping_result
+|> Kino.DataTable.new()
+```
+
+```elixir
+output_content =
+  mapping_result
+  |> CSV.encode(headers: true)
+  |> Enum.join("")
+
+Kino.Download.new(
+  fn -> output_content end,
+  filename: "output.csv",
+  label: "Output File"
+)
+
+```
+
+```elixir
+Location.get_by_esel_legacy_id(995)  |> MavuUtils.on_error_nil()
+
+```
+
+
+
+```elixir
+import IEx.Helpers
+r MyApp.Agents
+```
+
+```elixir
+
+```
+
+```elixir
+# optional: where "keep Loc" is "no" 
+# --> delete imported Location (trauen wir uns das? 
+# können wir die Legacy Loc ID vom Import auf den neu angelegten AG übertragen?)
+# ➜ legacy loc id in memo feld eintragen 
+
+locs_to_delete =
+  locmap
+  |> Enum.filter(fn x -> x["keep LOC"] == "no" end)
+
+for %{"ID" => loc_id, "agent URL" => agent_url, "alte ID" => alte_id} <- locs_to_delete do
+  loc = Location.resolve0(loc_id)
+
+  agent = Agent.resolve0(Path.basename(agent_url))
+
+  memo = "created from legacy_location #{alte_id}"
+  ret = %{location_to_delete: loc[:title], agent_to_keep: agent[:title], memo: memo}
+
+  if loc && agent do
+    agent
+    |> Ash.Changeset.for_update(:update, %{memo: memo})
+    |> Ash.update!()
+
+    loc.title |>MavuUtils.log("delete", :info)
+    
+    loc
+     |> Ash.destroy()
+
+  end
+  ret
+end
+
+|> Kino.DataTable.new()
+```
+
+```elixir
+
+```

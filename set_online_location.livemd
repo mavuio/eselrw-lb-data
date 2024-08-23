@@ -1,0 +1,148 @@
+# move to online location
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+require Ecto.Query
+require Ash.Query
+import MyApp.MavuEntities.UuidGuards
+
+```
+
+## Section
+
+```elixir
+locnames=
+~s"""
+ASIFA Austria
+Calle Libre e.V.
+Crossing Europe Filmfestival gem. GmbH
+Daihatsu Rooftop Gallery
+Diagonale Forum österreichischer Film
+FOTO ARSENAL WIEN
+Fanzineist
+Fridays for Future
+Golden Pixel Cooperative
+HochSommer Festival - Verein zur Förderung zeitgenössischer Kunst
+ImPulsTanz
+Verein Klangmanifeste
+Kultursommer Wien
+MUME
+Never At Home
+Parallel Art GmbH
+Raising Hands - Verein zur Förderung von partizipativer Kunst im öffentlichen Raum
+Recht auf Museum?
+SOS Mitmensch
+Station Rose
+Tangente St. Pölten
+The Dissident Goddesses Network
+Tricky Women
+VAN Art Space
+Verein K – Kunst, Kultur, Kommunikation
+ArtCluster Vienna. Verein zur Förderung kultureller Einrichtungen
+Verein Neigungsgruppe Design
+VIENNALE Internationales Filmfestival Wien
+Wien Modern, Verein für neue Musik
+Wiener Festwochen
+architektur in progress - Verein zur Förderung junger und innovativer Architektur
+curated by
+czirp czirp
+echoraeume - Verein zur Förderung virtueller und hybrider Kunstformen
+ethnocineca – Verein zur Förderung audio-visueller Kultur
+kunst.wollen
+kültüř gemma!
+sixpackfilm
+steirischer herbst
+this human world
+wienXtra
+Verein zur Förderung der Stadtbenutzung
+"""
+ |> String.split("\n", trim: true)
+```
+
+```elixir
+locnames |> length()
+```
+
+```elixir
+for locname <- locnames do
+
+  Location
+   |>  Ash.Query.filter(title: locname)
+   |> Ash.read_one!()
+end
+  |> Enum.reject( &is_nil/1)
+
+ |> Enum.map(fn a -> a |> Map.take(~w(title id)a) end)
+
+|> Kino.DataTable.new()
+
+```
+
+```elixir
+agents=for locname <- locnames do
+
+  Agent
+   |>  Ash.Query.filter(title: locname)
+   |> Ash.read_first!()
+end
+  |> Enum.reject( &is_nil/1)
+
+ |> Enum.map(fn a -> a |> Map.take(~w(title id memo)a) end)
+
+|> Kino.DataTable.new()
+```
+
+Alle Showtimes, deren [Legacy Event.Feed URLs] is [not empty] -->
+
+assign [showtime Location] "Online" https://rewind.esel.at/location/loc_02xLVzE2ilJDzMMzbWXBSA
+
+add [Legacy Event.alternative Location] to [Showtime Location Text] separate with [", "]
+
+```elixir
+evs=LegacyEvent
+|> Ash.Query.filter( string_length(feed_urls)>5)
+|> Ash.read!()
+
+evs 
+ |> Enum.map(fn a -> a |> Map.take(~w(title feed_urls)a) end)
+|> Kino.DataTable.new()
+```
+
+```elixir
+online_location_id="loc_02xLVzE2ilJDzMMzbWXBSA" |> to_uuid!()
+```
+
+```elixir
+MavuEntities.resolve!({"loc",online_location_id})
+```
+
+```elixir
+for le <- evs |> Enum.take(1000000) do
+  Event.get_by_legacy_event_id(le.id, load: [:showtimes])
+  |> case do
+    {:ok, ev} ->
+      MavuUtils.log("found", :info)
+
+      for st <- ev.showtimes do
+        %{t: le.title, u: le.feed_urls, day1: st.day1, loc: st.location_id,evid: ev.id}
+
+        st
+        |> Ash.Changeset.for_update(:update, %{
+          location_id: online_location_id,
+          location_text: le.feed_urls
+        })
+        |> Ash.update!()
+      end
+
+    {:error, error_info} ->
+      MavuUtils.log("not found", :error)
+      nil
+  end
+end
+|> List.flatten()
+|> Enum.reject(&is_nil/1)
+|> Kino.DataTable.new()
+```

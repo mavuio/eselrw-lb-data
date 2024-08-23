@@ -1,0 +1,102 @@
+# neu generierte Organization Agents bleiben mit Events verknüpft (organizer od. artist)
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+require Ecto.Query
+require Ash.Query
+import MyApp.MavuEntities.UuidGuards
+
+
+```
+
+## Section
+
+```elixir
+# ich soll alle Organisationsagent suchen und die Zuordnungen die derzeit schon bestehen 
+#und das Tag artist_at haben teilweise auf organizer_of  umstellen, korrekt ?
+```
+
+```elixir
+# if organization has category "group" or organization type "artist group" then relation "artist at"
+# if organization is (anything else) then relation "organizer of"
+
+artist_group_uuid = MyApp.MavuTags.resolve_uuid0("artist_group") |> Ecto.UUID.dump!()
+
+group_uuid = MyApp.MavuTags.resolve_uuid0("group") |> Ecto.UUID.dump!()
+
+org_agents =
+  Agent
+  |> Ash.Query.filter(type: :organization)
+  |> Ash.Query.filter(
+    not (fragment(
+           "? @>  jsonb_build_array( jsonb_build_object('type', ?::uuid))",
+           agenttypes,
+           ^artist_group_uuid
+         ) or
+           fragment(
+             "? @>  jsonb_build_array( jsonb_build_object('type', ?::uuid))",
+             genders,
+             ^group_uuid
+           ))
+  )
+  |> Ash.read!()
+
+org_agents |> length()
+```
+
+```elixir
+arrows_to_handle=for ag <- org_agents   do
+
+  MyApp.Pudel.DetailEvent.get_arrows_as_map(ag)
+   |> case do
+      %{"artist-at": artist_at_relations } ->
+        artist_at_relations
+         |> Enum.map(fn rel -> Arrow.resolve!(rel.arrow) end)
+      
+      _ -> nil
+    end
+
+end
+
+
+arrows_to_handle |> length()
+
+```
+
+```elixir
+arrows_to_handle=arrows_to_handle  
+|> List.flatten()
+|> Enum.reject( &is_nil/1)
+
+arrows_to_handle |> length()
+```
+
+```elixir
+new_at_id = ArrowType.get_by_any_name!("organizer of") |> Map.get(:id)
+
+for arrow <- arrows_to_handle do
+  arrow
+  |> Ash.Changeset.for_update(:update, %{arrow_type: new_at_id})
+  |> Ash.update!()
+end
+```
+
+```elixir
+
+```
+
+```elixir
+#und das Tag artist_at haben teilweise auf organizer_of  umstellen, korrekt ?
+
+
+arrows_to_handle
+|> Kino.DataTable.new()
+```
+
+```elixir
+import IEx.Helpers
+r MyApp.Arrow
+```

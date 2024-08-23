@@ -1,0 +1,65 @@
+# zeichencodierung fixes
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+require Ecto.Query
+require Ash.Query
+import MyApp.MavuEntities.UuidGuards
+
+```
+
+## Section
+
+```elixir
+evs_with_html=
+  Event
+|> Ash.Query.filter(like(title,"%<%"))
+|> Ash.read!()
+
+
+  evs_with_html |> length()
+  
+```
+
+```elixir
+evs_with_html
+|> Enum.map(fn a -> Map.take(a, ~w(id title)a)  end)
+|> Kino.DataTable.new()
+```
+
+```elixir
+defmodule Helpers do
+
+  def sanitize(text) do
+    text
+    |> String.replace(~r{(<i>|</i>|<b>|</b>|<br>)}mis,"")
+  end
+  
+end
+```
+
+```elixir
+for ev <- evs_with_html do
+  title=ev.title
+  title2=Helpers.sanitize(title) |> HtmlEntities.decode()
+
+  if title != title2 do
+
+    ev 
+    |> Ash.Changeset.for_update(:update, %{title: title2})
+    |> Ash.update!()
+
+    
+    %{title: title, title2: title2}
+  end
+  
+end
+
+|> Enum.reject( &is_nil/1)
+
+
+|> Kino.DataTable.new()
+```

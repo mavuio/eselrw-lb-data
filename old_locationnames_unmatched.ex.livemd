@@ -1,0 +1,112 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# old_locationnames_unmatched
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+require Ecto.Query
+require Ash.Query
+import IEx.Helpers
+import MyApp.MavuEntities.UuidGuards
+```
+
+## Section
+
+```elixir
+# hole alle locations mit alternativen schreibweisen
+all_slugs = MyAppBe.LocationsLive.LocationAltnamesLc.get_alternative_location_slugs()
+ |> Enum.uniq()
+all_slugs |> length()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+
+23:10:11.619 [debug] QUERY OK source="legacy_events" db=142.3ms decode=0.1ms idle=1956.1ms
+SELECT DISTINCT ON (l0."alternative_location") l0."alternative_location" FROM "legacy_events" AS l0 []
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+13736
+```
+
+```elixir
+mapped_slugs =
+  for loc <-
+        Location
+        |> Ash.Query.filter(not is_nil(alternative_location_slugs))
+        |> Ash.read!() do
+    slugs =
+      loc.alternative_location_slugs
+      |> String.split("\n", trim: true)
+      |> Enum.map(&String.trim/1)
+
+    # otherlocs=
+    #   slugs
+    #    |> Enum.map(&Location.get_by_slug!/1)
+    slugs
+  end
+  |> List.flatten()
+
+
+mapped_slugs |> length()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+
+16:26:29.714 [debug] QUERY OK source="locations" db=29.2ms decode=0.1ms queue=0.7ms idle=1423.9ms
+SELECT l0."id", l0."title", l0."names", l0."isrunby_agents", l0."street", l0."zip", l0."city", l0."description", l0."references", l0."lifeevents", l0."gen_eventcount", l0."artdisciplines_major", l0."artdisciplines_minor", l0."screenshot", l0."esel_legacy_id", l0."locationtypes", l0."sublocations", l0."tags", l0."memo", l0."alternative_location_slugs", l0."created_at", l0."updated_at" FROM "locations" AS l0 WHERE (NOT (l0."alternative_location_slugs"::text IS NULL)) []
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+9060
+```
+
+```elixir
+unmapped_slugs  = all_slugs -- mapped_slugs
+unmapped_slugs |> length()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+7186
+```
+
+```elixir
+slugstats =
+  all_slugs
+  |> Enum.map(fn slug -> %{slug: slug, is_mapped: slug in mapped_slugs} end)
+
+slugstats
+|> Kino.DataTable.new()
+```
+
+<!-- livebook:{"output":true} -->
+
+```text
+[%{slug: "05-09-08-19-30-20-wallensteinplatz", is_mapped: true}, %{slug: "0-port", is_mapped: false}, %{slug: "0-port-electric-avenue-quartier21-mq", is_mapped: false}, %{slug: "0-port-museumsquartier-electric-avenue-quartie", is_mapped: true}, %{slug: "0-port-quartier21-mq-electric-avenue", is_mapped: false}, %{slug: "1010-riemergasse", is_mapped: false}, %{slug: "1010-seilerstatte", is_mapped: false}, %{slug: "1010-wien", is_mapped: false}, %{slug: "1010-wien-bauernmarkt-1", is_mapped: false}, %{slug: "1010-wien-gonzagagasse-11", is_mapped: false}, %{slug: "1010-wien-gonzagasse-11", is_mapped: false}, %{slug: "1010-wien-herreng-5", is_mapped: false}, %{slug: "1010-wien-karlsplatz", is_mapped: true}, %{slug: "1010-wien-petersplatz-1", is_mapped: false}, %{slug: "1010-wien-wipplingerstrasse-23", is_mapped: false}, %{slug: "1020", is_mapped: false}, %{slug: "1020-tempelgasse", is_mapped: false}, %{slug: "1020-wien", is_mapped: false}, %{slug: "1020-wien-fluc-praterstern-5", is_mapped: true}, %{slug: "1020-wien-galopprennbahn-freudenau-rennbahnstrasse-65", is_mapped: false}, %{slug: "1020-wien-praterstrasse-42", is_mapped: false}, %{slug: "1030-dapontegasse-9a", is_mapped: false}, %{slug: "1030-obere-viaduktgasse-2", is_mapped: false}, %{slug: "1030-rochusmarkt", is_mapped: false}, %{slug: "1030-wien", is_mapped: false}, %{slug: "1030-wien-erdbergstrasse-5-7", is_mapped: false}, %{slug: "1030-wien-h-ouml-rnesgasse-5-t-uuml-r-2", is_mapped: false}, %{slug: "1040-schleifmuhlgasse", is_mapped: true}, %{slug: "1040-wien", is_mapped: false}, %{slug: "1050-wien", is_mapped: false}, %{slug: "1050-wien-giessaufgasse-11", is_mapped: false}, %{slug: "1050-wien-margaretengurtel-100-102-ecke-siebenbrunnengasse", is_mapped: false}, %{slug: "1-06", is_mapped: false}, %{slug: "1060-mariahilf", is_mapped: true}, %{slug: "1060-menzelgasse-5", is_mapped: true}, %{slug: "1060-schleifmuhlbrucke-naschmarkt", is_mapped: true}, %{slug: "1060-und-1070-wien", is_mapped: false}, %{slug: "1060-wien-barnabitengasse", is_mapped: false}, %{slug: "1060-wien-kandlg", is_mapped: false}, %{slug: "1060-wien-wallgasse-5", is_mapped: false}, %{slug: "1060-wien-zwischen-naschmarkt-und-gumpendorfer", is_mapped: false}, %{slug: "1070-lerchenfelder-strasse-13", is_mapped: false}, %{slug: "1070-mariahilferstrasse-76", is_mapped: false}, %{slug: "1070-wien", is_mapped: false}, %{slug: "1070-wien-der-genaue-treffpunkt-wird-bei-anmeldung-bekannt-gegeben", is_mapped: false}, %{slug: "1070-wien-hermanngasse-ecke-westbahnstrasse", is_mapped: false}, %{slug: "1070-wien-kandlgasse-6", is_mapped: false}, %{slug: "1070-wien-lindengasse-61-63", is_mapped: false}, %{slug: "1070-wien-siebensterngasse-16", ...}, %{...}, ...]
+```
+
+```elixir
+output_content =
+  slugstats
+  |> CSV.encode(headers: true)
+  |> Enum.join("")
+
+Kino.Download.new(
+  fn -> output_content end,
+  filename: "output.csv",
+  label: "Output File"
+)
+```
