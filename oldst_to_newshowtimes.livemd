@@ -1,0 +1,53 @@
+# oldst_to_newshowtimes
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+require Ecto.Query
+require Ash.Query
+import MyApp.MavuEntities.UuidGuards
+
+```
+
+## Section
+
+```elixir
+# get events without showtimes
+
+events_without_showtimes=
+Event
+# |> Ash.Query.load(:oldshowtimes |> List.wrap())
+|> Ash.Query.filter(count_of_showtimes == 0)
+|> Ash.read!()
+
+events_without_showtimes |> length()
+
+```
+
+```elixir
+for ev <- events_without_showtimes |> Enum.take(100000) do
+  for ost <- ev.oldshowtimes |> List.wrap() do
+    ost
+
+    MyApp.Showtime
+    |> Ash.Changeset.for_create(:create, %{
+      location_id: ost.location ||  (ev.locations |> List.wrap()|> List.first()),
+      event_id: ev.id,
+      day1: ost.datemark,
+      day2: ost.datemark
+    })
+    |> Ash.create()
+    |> case do
+      {:ok, rec} ->
+        %{type: "ok", url: MyApp.Oai.get_public_url(ev), error_info: nil,ost: ost}
+
+      {:error, error_info} ->
+        %{type: "error", url: MyApp.Oai.get_public_url(ev), error_info: error_info,ost: ost}
+    end
+  end
+end
+ |> List.flatten()
+|> Kino.DataTable.new()
+```

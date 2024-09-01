@@ -1,0 +1,37 @@
+# legacy_imgsuche
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+require Ecto.Query
+require Ash.Query
+import MyApp.MavuEntities.UuidGuards
+
+```
+
+## Section
+
+```elixir
+legacy_events_with_images=
+LegacyEvent
+|> Ash.Query.filter(string_length(image_adress)>5)
+|> Ash.read!()
+
+legacy_events_with_images |> length()
+```
+
+```elixir
+legacy_events_with_missing_images =
+  for le <- legacy_events_with_images do
+    Event.get_by_legacy_event_id(le.id)
+    |> case do
+      {:ok, %{image: image}} when is_binary(image) -> nil
+      _ -> le
+    end
+  end
+  |> Enum.reject(&is_nil/1)
+
+legacy_events_with_missing_images |> length()
+```

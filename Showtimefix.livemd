@@ -1,0 +1,73 @@
+# Showtimefix
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+require Ecto.Query
+require Ash.Query
+import MyApp.MavuEntities.UuidGuards
+
+```
+
+## Section
+
+```elixir
+Showtime
+|> Ash.Query.filter(day2 == "1970-01-01" )
+|> Ash.read!()
+|> Enum.map(fn a -> a  |> Map.take(~w(day1 day2)a) end)
+|> Kino.DataTable.new()
+```
+
+```elixir
+showtimes_with_empty_day1=
+  Showtime
+|> Ash.Query.filter(day1 == "1970-01-01" and day2 != "1970-01-01")
+|> Ash.read!()
+
+  showtimes_with_empty_day1
+|> Enum.map(fn a -> a  |> Map.take(~w(day1 day2)a) end)
+|> Kino.DataTable.new()
+```
+
+```elixir
+for st <- showtimes_with_empty_day1 do
+
+st
+|> Ash.Changeset.for_update(:update, %{day1: st.day2})
+|> Ash.update!()
+
+  
+end
+
+```
+
+```elixir
+showtimes_with_long_duration =
+  Showtime
+  |> Ash.Query.load([:days, :event])
+  |> Ash.Query.filter(days > 360)
+  |> Ash.read!()
+
+showtimes_with_long_duration
+|> Enum.map(fn a ->
+  a
+  |> Map.take(~w(day1 day2 days)a)
+  |> Map.put(:url, "https://www.esel.at/termin/#{a.event.legacy_event_id}")
+end)
+|> Kino.DataTable.new()
+```
+
+```elixir
+for st <- showtimes_with_long_duration do
+
+st
+|> Ash.Changeset.for_update(:update, %{day1: st.day2})
+|> Ash.update!()
+
+  
+end
+
+```

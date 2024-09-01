@@ -47,22 +47,22 @@ artweekcopy_events =
 
 ```elixir
 for ace <- artweekcopy_events do
-  old_ev_id = ace.memo |> String.replace("copy of ", "")
+old_ev_id = ace.memo |> String.replace("copy of ", "")
 
-  Event.resolve(old_ev_id)
-  |> case do
-    {:ok, old_ev} ->
-      arrows =
-        MyApp.Pudel.DetailEvent.get_arrows_as_map(old_ev)
-        |> Map.get(:"pictures-taken")
+Event.resolve(old_ev_id)
+|> case do
+  {:ok, old_ev} ->
+    arrows =
+      MyApp.Pudel.DetailEvent.get_arrows_as_map(old_ev)
+      |> Map.get(:"pictures-taken")
 
-      for a <- arrows || [] do
-        Albums.assign_album_to_event(a.id |> Album.resolve0(), ace)
-      end
+    for a <- arrows || [] do
+      Albums.assign_album_to_event(a.id |> Album.resolve0(), ace)
+    end
 
-    {:error, _error_info} ->
-      nil
-  end
+  {:error, _error_info} ->
+    nil
+end
 end
 ```
 
