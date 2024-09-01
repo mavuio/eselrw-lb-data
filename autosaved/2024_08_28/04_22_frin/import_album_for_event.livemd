@@ -1,0 +1,35 @@
+# import album for event
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+require Ecto.Query
+require Ash.Query
+import MyApp.MavuEntities.UuidGuards
+
+```
+
+## Section
+
+```elixir
+ev=MavuEntities.resolve!("ev_02vvBu0ZDYKYa0LLSFDkSc")
+```
+
+```elixir
+[legacy_album]=LegacyMysqlAlbum
+   |> Ecto.Query.where(event_id: ^ev.esel_legacy_id)
+ |> MyApp.LegacyRepo.all()
+
+
+
+```
+
+```elixir
+{:ok,album}=MyApp.LegacyAlbumImport.import_legacy_album(legacy_album)
+```
+
+```elixir
+
+```

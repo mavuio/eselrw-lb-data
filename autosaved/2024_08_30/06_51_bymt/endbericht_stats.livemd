@@ -1,0 +1,47 @@
+# endbericht_stats
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+require Ecto.Query
+require Ash.Query
+import MyApp.MavuEntities.UuidGuards
+
+```
+
+## Section
+
+```elixir
+anzahl_events=
+
+  Event
+|> Ash.Query.filter(oai_ready: true)
+|> Ash.count!()
+```
+
+```elixir
+anzahl_titelbilder_fotos =
+  LegacyMysqlAlbum
+  |> LegacyRepo.all()
+  |> Enum.map(fn a -> a.event_id end)
+  |> Enum.uniq()
+  |> length()
+```
+
+```elixir
+anzahl_locations=
+
+  Location
+|> Ash.Query.filter(oai_ready: true)
+|> Ash.count!()
+```
+
+```elixir
+anzahl_agents=
+
+  Agent
+|> Ash.Query.filter(oai_ready: true)
+|> Ash.count!()
+```

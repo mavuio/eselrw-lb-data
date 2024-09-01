@@ -1,0 +1,128 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# weird unbekannte locations
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+require Ecto.Query
+require Ash.Query
+import MyApp.MavuEntities.UuidGuards
+
+```
+
+## Section
+
+```elixir
+Showtime
+|> Ash.Query.for_read(:read)
+|> Ash.Query.load([:event])
+|> Ash.Query.filter(location_id: "018f8004-5f77-7160-abb9-4ad76e08adb5")
+# |> Ash.Query.limit(1000)
+|> Ash.read!()
+|> Enum.map(fn st ->
+  {ll_id,ll_name} =
+    LegacyEvent.resolve(st.event.legacy_event_id)
+    |> case do
+      {:ok, %{organiser_ids: [ll_id]}} ->
+        LegacyLocation.resolve(ll_id)
+        |> case do
+          {:ok, ll} ->
+            {ll.id,ll.name}
+
+          _ ->
+            {nil,nil}
+        end
+
+      _ ->
+      {nil,nil}
+    end
+
+  st
+  |> Map.take(~w(location_text)a)
+  |> Map.put(:legacy_location,ll_name )
+  |> Map.put(:legacy_location_id,ll_id )
+    
+
+end)
+|> Enum.uniq()
+|> Enum.reject( &is_nil(&1.legacy_location))
+|> Enum.sort_by(fn x-> x[:legacy_location] end)
+|> Kino.DataTable.new()
+```
+
+<!-- livebook:{"output":true} -->
+
+```text
+[]
+```
+
+```elixir
+Showtime
+|> Ash.Query.for_read(:read)
+|> Ash.Query.load([:event])
+|> Ash.Query.filter(location_id: "018f8004-5f77-7160-abb9-4ad76e08adb5")
+# |> Ash.Query.limit(100)
+|> Ash.read!()
+|> Enum.map(fn st ->
+  {ll_id, ll_name} =
+    LegacyEvent.resolve(st.event.legacy_event_id)
+    |> case do
+      {:ok, %{organiser_ids: [ll_id]}} ->
+        ll_id =
+          case ll_id do
+            2066 -> 989
+            856 -> 454
+            a -> a
+          end
+
+        LegacyLocation.resolve(ll_id)
+        |> case do
+          {:ok, ll} ->
+            {ll.id, ll.name}
+
+          _ ->
+            {nil, nil}
+        end
+
+      _ ->
+        {nil, nil}
+    end
+
+  new_location =
+    Location.get_by_esel_legacy_id(ll_id)
+    |> case do
+      {:ok, rec} ->
+        rec
+
+      {:error, _error_info} ->
+        %{id: nil, title: nil}
+    end
+
+  if new_location.id do
+    st
+    |> Ash.Changeset.for_update(:update, %{location_id: new_location.id})
+    |> Ash.update!()
+  end
+
+  st
+  |> Map.take(~w(location_text)a)
+  |> Map.put(:legacy_location, ll_name)
+  |> Map.put(:new_location, ll_id)
+  |> Map.put(:new_location, new_location.title)
+  |> Map.put(:new_location_id, new_location.id)
+end)
+# |> Enum.filter(fn x -> is_nil(x.new_location_id) end)
+|> Enum.uniq()
+|> Enum.reject(&is_nil(&1.legacy_location))
+|> Enum.sort_by(fn x -> x[:legacy_location] end)
+|> Kino.DataTable.new()
+```
+
+<!-- livebook:{"output":true} -->
+
+```text
+[]
+```

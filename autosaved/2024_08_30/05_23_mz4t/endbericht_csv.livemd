@@ -1,0 +1,78 @@
+# endbericht_csv
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+require Ecto.Query
+require Ash.Query
+import MyApp.MavuEntities.UuidGuards
+
+```
+
+## Section
+
+```elixir
+defmodule Helper do
+  def create_row(rec) do
+    webid=rec |> to_webid!()
+    url=MyApp.Oai.get_public_url(rec)
+    %{
+      "Fördernehmer_in": "E.S.E.L. KG",
+      "eindeutigeNummer des Digitalisats": "AT-ESEL-#{webid}",
+      "Analogfilm": "",
+      "3D": "",
+      "Sonstige": "x",
+      "Ressourcenadresse": "#{url}/resource",
+      "Titel des Digitalisats": rec.title,
+      "Kontextadresse": url,
+      "Kommentar (optional)": ""
+    }
+  end
+end
+```
+
+```elixir
+n=1000000000
+```
+
+```elixir
+rows=(Event
+# |> Ash.Query.for_read(:keyset) 
+|> Ash.Query.filter(oai_ready: true)
+|> Ash.stream!()
+|> Stream.map(fn a -> Helper.create_row(a) end)
+|> Enum.take(n) )
+++
+(Location
+# |> Ash.Query.for_read(:keyset) 
+|> Ash.Query.filter(oai_ready: true)
+|> Ash.stream!()
+|> Stream.map(fn a -> Helper.create_row(a) end)
+|> Enum.take(n) )
+++
+(Agent
+# |> Ash.Query.for_read(:keyset) 
+|> Ash.Query.filter(oai_ready: true)
+|> Ash.stream!()
+|> Stream.map(fn a -> Helper.create_row(a) end)
+|> Enum.take(n) )
+
+
+rows |> Kino.DataTable.new()
+
+```
+
+```elixir
+output_content =
+  rows
+  |> CSV.encode(headers: true)
+  |> Enum.join("")
+
+Kino.Download.new(
+  fn -> output_content end,
+  filename: "endbericht.csv",
+  label: "Endbericht"
+)
+```

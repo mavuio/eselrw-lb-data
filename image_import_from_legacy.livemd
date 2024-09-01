@@ -1,0 +1,75 @@
+# image_import_from_legacy
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+require Ecto.Query
+require Ash.Query
+import MyApp.MavuEntities.UuidGuards
+
+```
+
+## Section
+
+```elixir
+event_ids_without_images=
+Event
+|> Ash.Query.select([:id])
+# |> Ash.Query.filter(legacy_event_id >0)
+|> Ash.Query.filter(esel_legacy_id >0 and (esel_legacy_id != legacy_event_id or is_nil(legacy_event_id)))
+|> Ash.Query.filter(is_nil(image))
+|> Ash.read!()
+|> Enum.map(fn a -> a.id end)
+
+
+
+event_ids_without_images |> length()
+```
+
+```elixir
+Event
+# |> Ash.Query.select([:id])
+# |> Ash.Query.filter(legacy_event_id >0)
+|> Ash.Query.filter(esel_legacy_id >0 and (esel_legacy_id != legacy_event_id or is_nil(legacy_event_id)))
+|> Ash.Query.filter(is_nil(image))
+|> Ash.read!()
+|> Enum.map(fn a -> "https://www.esel.at/termin/#{a.esel_legacy_id}" end)
+```
+
+```elixir
+ event_ids_to_process=
+   event_ids_without_images  
+   # |> Enum.drop_while(fn x-> x <> "018e1422-e3ab-7450-84aa-1c0df0de5c78" end)
+
+ event_ids_to_process |> length()
+
+```
+
+```elixir
+for evid <- event_ids_to_process   do
+  evid |> MavuUtils.log("upgrade", :info)
+
+  try do
+    
+    MyApp.Eselfiles.upgrade_image_in_event(evid)
+     |> case do
+      {:ok, mf} ->
+       "https://rewind.esel.at/event/#{evid}" |> MavuUtils.log("IMAGE HANDLED", :info)
+        Process.sleep(500)
+
+      {:error, error_info} ->
+         MavuUtils.log("NO IMAGE HANDLED", :info)
+
+    end
+
+  rescue
+    exception ->
+     exception |>MavuUtils.log("error occured", :error)
+  end
+
+end
+
+|> length()
+```

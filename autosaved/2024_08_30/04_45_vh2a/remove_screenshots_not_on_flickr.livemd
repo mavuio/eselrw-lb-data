@@ -1,0 +1,45 @@
+# remove_screenshots_not_on_flickr
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+require Ecto.Query
+require Ash.Query
+import MyApp.MavuEntities.UuidGuards
+
+```
+
+## Section
+
+```elixir
+screenshots_not_on_flickr=
+Event
+# |> Ash.Query.select([:screenshot_mf])
+|> Ash.Query.filter(screenshot_mf.ref_prefix == "ev" and is_nil(screenshot_mf.flickr_id))
+|> Ash.Query.load([:screenshot_mf])
+|> Ash.read!()
+|> Enum.map(fn a -> a.screenshot_mf end)
+
+screenshots_not_on_flickr |> length()
+```
+
+```elixir
+mf=screenshots_not_on_flickr  |> hd()
+
+```
+
+```elixir
+lc=LogContext.new()
+```
+
+```elixir
+for mf <- screenshots_not_on_flickr do
+  MyApp.EselfileUploadJob.queue_upload_job(lc,mf.id)
+end
+```
+
+```elixir
+mfnew=MavuFile.resolve!(mf.id)
+```

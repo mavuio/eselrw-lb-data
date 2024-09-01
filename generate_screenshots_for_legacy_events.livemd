@@ -1,0 +1,148 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# generate_screenshots_for_legacy_events
+
+```elixir
+use QuickAlias, MyAppWeb
+use QuickAlias, MyAppBe
+use QuickAlias, MyApp
+
+require Ecto.Query
+require Ash.Query
+import MyApp.MavuEntities.UuidGuards
+
+```
+
+## Section
+
+```elixir
+event_ids_without_sceenshots=
+Event
+|> Ash.Query.select([:id])
+|> Ash.Query.filter(is_nil(screenshot))
+|> Ash.Query.filter(legacy_event_id>1)
+   |> Ash.read!()
+|> Enum.map(fn a -> a.id end)
+
+
+event_ids_without_sceenshots|> length()
+
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+2486
+```
+
+```elixir
+event_ids_to_process=event_ids_without_sceenshots 
+
+
+event_ids_to_process|> length()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+2489
+```
+
+```elixir
+for evid <- event_ids_to_process do
+  ev=Event.resolve!(evid)
+
+  evid|>MavuUtils.log("processing", :info)
+  Screenshots.add_screenshot_to_event(ev)
+  
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+
+06:37:40.321 [info] processing "018e1423-e3f3-7e33-9451-435a2d98908e"
+
+06:37:45.380 [info] 4cff2:  [info] clblue "» job[121013]: status changed to '<b>queued</b>'"
+
+06:37:45.381 [info] 4cff2:  [info] clblue "Elixir.MyApp.EselfileUploadJob do_upload_job queued job 121013 in OBAN #clgreen"
+
+06:37:45.410 [info] joblog_wed:  [info] clblue "[4cff2]06:37:45: [4cff2] queuing upload job for file 019197b4-5b96-7a93-9802-793d08daf78f <a href=\"/be/joblog/4cff2\" class=\"underline\">➜ view log</a>"
+
+06:37:45.418 [info] processing "018e1421-e0e3-7c9b-99f0-bca272a5de1f"
+
+06:37:58.063 [error] '@create_mavu_file' failed {:error,
+ {:error,
+  ["convert: width or height exceeds limit `/tmp/204c333b-f957-4ed8-8598-e31c2ae66cc9.pdf.png' @ error/cache.c/OpenPixelCache/3909.\n"]}}
+
+06:37:58.063 [error] '@get_mf' failed {:error,
+ {:create_mavu_file, "'@create_mavu_file' failed",
+  {:error,
+   {:error,
+    ["convert: width or height exceeds limit `/tmp/204c333b-f957-4ed8-8598-e31c2ae66cc9.pdf.png' @ error/cache.c/OpenPixelCache/3909.\n"]}}}}
+
+06:37:58.065 [info] processing "018e1424-bd1a-790f-9a37-a333e948cac0"
+
+06:38:01.538 [info] 16338:  [info] clblue "» job[121014]: status changed to '<b>queued</b>'"
+
+06:38:01.539 [info] 16338:  [info] clblue "Elixir.MyApp.EselfileUploadJob do_upload_job queued job 121014 in OBAN #clgreen"
+
+06:38:01.569 [info] joblog_wed:  [info] clblue "[16338]06:38:01: [16338] queuing upload job for file 019197b4-9ade-74ef-82b1-ee447369536d <a href=\"/be/joblog/16338\" class=\"underline\">➜ view log</a>"
+
+06:38:01.577 [info] processing "018e1424-3a1c-7074-8c23-6c0064b018b5"
+
+06:38:06.106 [info] 90f8d:  [info] clblue "» job[121015]: status changed to '<b>queued</b>'"
+
+06:38:06.106 [info] 90f8d:  [info] clblue "Elixir.MyApp.EselfileUploadJob do_upload_job queued job 121015 in OBAN #clgreen"
+
+06:38:06.139 [info] joblog_wed:  [info] clblue "[90f8d]06:38:06: [90f8d] queuing upload job for file 019197b4-aca6-72fd-a8cd-be4257ad6a4c <a href=\"/be/joblog/90f8d\" class=\"underline\">➜ view log</a>"
+
+06:38:06.146 [info] processing "018e1422-01f0-76be-a2bb-6c1bb71818da"
+
+06:38:19.051 [error] '@create_mavu_file' failed {:error,
+ {:error,
+  ["convert: width or height exceeds limit `/tmp/bc57aba5-1d88-4977-93da-0c33dfa1c32e.pdf.png' @ error/cache.c/OpenPixelCache/3909.\n"]}}
+
+06:38:19.051 [error] '@get_mf' failed {:error,
+ {:create_mavu_file, "'@create_mavu_file' failed",
+  {:error,
+   {:error,
+    ["convert: width or height exceeds limit `/tmp/bc57aba5-1d88-4977-93da-0c33dfa1c32e.pdf.png' @ error/cache.c/OpenPixelCache/3909.\n"]}}}}
+
+06:38:19.054 [info] processing "018e1422-348a-77a6-845c-1ee492bfdf38"
+
+06:38:31.701 [error] '@create_mavu_file' failed {:error,
+ {:error,
+  ["convert: no images defined `/tmp/ENP4ZG4ESD2GMBYT5XURXXNLPPWRKDH4.jpg' @ error/convert.c/ConvertImageCommand/3229.\n"]}}
+
+06:38:31.702 [error] '@get_mf' failed {:error,
+ {:create_mavu_file, "'@create_mavu_file' failed",
+  {:error,
+   {:error,
+    ["convert: no images defined `/tmp/ENP4ZG4ESD2GMBYT5XURXXNLPPWRKDH4.jpg' @ error/convert.c/ConvertImageCommand/3229.\n"]}}}}
+
+06:38:31.705 [info] processing "018e1423-37a7-7491-a488-06a32cc09365"
+
+06:38:44.767 [error] '@create_mavu_file' failed {:error,
+ {:error,
+  ["convert: width or height exceeds limit `/tmp/cb28dd90-877a-4c4d-874f-46876a5c607d.pdf.png' @ error/cache.c/OpenPixelCache/3909.\n"]}}
+
+06:38:44.767 [error] '@get_mf' failed {:error,
+ {:create_mavu_file, "'@create_mavu_file' failed",
+  {:error,
+   {:error,
+    ["convert: width or height exceeds limit `/tmp/cb28dd90-877a-4c4d-874f-46876a5c607d.pdf.png' @ error/cache.c/OpenPixelCache/3909.\n"]}}}}
+
+06:38:44.769 [info] processing "018e1422-34c7-7875-b6d1-83480c2838ed"
+
+06:38:57.360 [error] '@create_mavu_file' failed {:error,
+ {:error,
+  ["convert: width or height exceeds limit `/tmp/d4d1976e-9ee5-4397-9aeb-2f0fd226a03b.pdf.png' @ error/cache.c/OpenPixelCache/3909.\n"]}}
+
+06:38:57.360 [error] '@get_mf' failed {:error,
+ {:create_mavu_file, "'@create_mavu_file' failed",
+  {:error,
+   {:error,
+    ["convert: width or height exceeds limit `/tmp/d4d1976e-9ee5-4397-9aeb-2f0fd226a03b.pdf.png' @ error/cache.c/OpenPixelCache/3909.\n"]}}}}
+```
